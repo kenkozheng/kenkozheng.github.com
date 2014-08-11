@@ -18,6 +18,7 @@ var HelloWorldLayer = cc.Layer.extend({
             res.CloseSelected_png,
             function () {
                 cc.log("Menu is clicked!");
+                cc.director.end();
             }, this);
         closeItem.attr({
             x: size.width - 20,
@@ -37,7 +38,7 @@ var HelloWorldLayer = cc.Layer.extend({
         // create and initialize a label
         var helloLabel = cc.LabelTTF.create("Hello World", "Arial", 38);
         // position the label on the center of the screen
-        helloLabel.x = size.width / 3;
+        helloLabel.x = size.width / 2;
         helloLabel.y = 0;
         // add the label as a child to this layer
         this.addChild(helloLabel, 5);
@@ -45,7 +46,7 @@ var HelloWorldLayer = cc.Layer.extend({
         // add "HelloWorld" splash screen"
         this.sprite = cc.Sprite.create(res.HelloWorld_png);
         this.sprite.attr({
-            x: size.width / 2,
+            x: 200,
             y: size.height / 2,
             scale: 0.5,
             rotation: 180
@@ -58,7 +59,17 @@ var HelloWorldLayer = cc.Layer.extend({
         this.sprite.runAction(cc.Sequence.create(rotateToA, scaleToA));
         helloLabel.runAction(cc.Spawn.create(cc.MoveBy.create(2.5, cc.p(0, size.height - 40)),cc.TintTo.create(2.5,255,125,0)));
         return true;
+    },
+
+    change: function(str) {
+        var helloLabel = cc.LabelTTF.create(str, "Arial", 38);
+        // position the label on the center of the screen
+        helloLabel.x = 500;
+        helloLabel.y = 300;
+        // add the label as a child to this layer
+        this.addChild(helloLabel, 6);
     }
+
 });
 
 var HelloWorldScene = cc.Scene.extend({
@@ -66,6 +77,27 @@ var HelloWorldScene = cc.Scene.extend({
         this._super();
         var layer = new HelloWorldLayer();
         this.addChild(layer);
+
+        cc.eventManager.addListener({
+            event: cc.EventListener.KEYBOARD,
+            onKeyReleased: function(keyCode, event) {
+                if (keyCode == 6 || keyCode == 8) {     //返回键，一些机型是6，一些是8 
+                    cc.director.end();
+                }
+                else if (keyCode == 15 || keyCode == 4199) {    //菜单键，一些机型是15，一些是4199
+                    layer.change("cc.KEY.menu");
+                }
+            }}, this);
+
+        //进入后台
+        cc.eventManager.addCustomListener(cc.game.EVENT_HIDE, function(){
+            layer.change("cc.game.EVENT_HIDE");
+        });
+
+        //恢复显示
+        cc.eventManager.addCustomListener(cc.game.EVENT_SHOW, function(){
+//            layer.change("cc.game.EVENT_SHOW");
+        });
     }
 });
 
