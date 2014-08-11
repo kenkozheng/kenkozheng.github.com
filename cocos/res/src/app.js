@@ -37,7 +37,7 @@ var HelloWorldLayer = cc.Layer.extend({
         // create and initialize a label
         var helloLabel = cc.LabelTTF.create("Hello World", "Arial", 38);
         // position the label on the center of the screen
-        helloLabel.x = size.width / 2;
+        helloLabel.x = size.width / 3;
         helloLabel.y = 0;
         // add the label as a child to this layer
         this.addChild(helloLabel, 5);
