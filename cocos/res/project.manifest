@@ -2,12 +2,12 @@
 	"packageUrl" : "http://kenkozheng.github.io/cocos/res/",
 	"remoteManifestUrl" : "http://kenkozheng.github.io/cocos/res/project.manifest",
 	"remoteVersionUrl" : "http://kenkozheng.github.io/cocos/res/version.manifest",
-	"version" : "1.0.2",
+	"version" : "1.0.3",
 	"engineVersion" : "3.0 beta",
 
 	"assets" : {
 		"src/app.js" : {
-			"md5" : "C6D341F0C34739073C82A337D6DFFD87"
+			"md5" : "99BA676B4FD27F28B38AC47C173B135A"
 		}
 	},
     
