@@ -6,11 +6,13 @@
 	"engineVersion" : "3.0 beta",
 
 	"assets" : {
-		"src/app.js" : {
-			"md5" : "7D88DFFA5FFA156AB2C19D02C5188619"
+		"src/app.zip" : {
+			"md5" : "A448DB449D110C526F655B2EC142A87B",
+			"compressed": true
 		},
-		"src/test.js" : {
-			"md5" : "7D88DFFA5FFA156AB2C19D02C5188619"
+		"src/test.zip" : {
+			"md5" : "A5D86B130718035EDC229CFA3048BEB0",
+			"compressed": true
 		}
 	},
     
