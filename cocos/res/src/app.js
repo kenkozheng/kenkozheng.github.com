@@ -1,4 +1,4 @@
-
+ï»¿
 var HelloWorldLayer = cc.Layer.extend({
     sprite:null,
     ctor:function () {
@@ -85,20 +85,20 @@ var HelloWorldScene = cc.Scene.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyReleased: function(keyCode, event) {
-                if (keyCode == 6 || keyCode == 8) {     //·µ»Ø¼ü£¬Ò»Ð©»úÐÍÊÇ6£¬Ò»Ð©ÊÇ8 
+                if (keyCode == 6 || keyCode == 8) {  
                     cc.director.end();
                 }
-                else if (keyCode == 15 || keyCode == 4199) {    //²Ëµ¥¼ü£¬Ò»Ð©»úÐÍÊÇ15£¬Ò»Ð©ÊÇ4199
+                else if (keyCode == 15 || keyCode == 4199) {  
                     layer.change("cc.KEY.menu");
                 }
             }}, this);
 
-        //½øÈëºóÌ¨
+      
         cc.eventManager.addCustomListener(cc.game.EVENT_HIDE, function(){
             layer.change("cc.game.EVENT_HIDE");
         });
 
-        //»Ö¸´ÏÔÊ¾
+ 
         cc.eventManager.addCustomListener(cc.game.EVENT_SHOW, function(){
 //            layer.change("cc.game.EVENT_SHOW");
         });
