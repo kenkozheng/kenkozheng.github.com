@@ -74,7 +74,7 @@ var HelloWorldLayer = cc.Layer.extend({
 
 });
 
-var HelloWorldScene = cc.Scene.extend({
+var MainScene = cc.Scene.extend({
     onEnter:function () {
         this._super();
         var layer = new HelloWorldLayer();

@@ -7,11 +7,11 @@
 
 	"assets" : {
 		"src/app.zip" : {
-			"md5" : "A448DB449D110C526F655B2EC142A87B",
+			"md5" : "6BDE724EBF6BB641E718D44D4AD5C18F",
 			"compressed": true
 		},
 		"src/test.zip" : {
-			"md5" : "A5D86B130718035EDC229CFA3048BEB0",
+			"md5" : "2751C53CD4C606710895D40AE33694AE",
 			"compressed": true
 		}
 	},
