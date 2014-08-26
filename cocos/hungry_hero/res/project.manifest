@@ -2,18 +2,10 @@
 	"packageUrl" : "http://kenkozheng.github.io/cocos/res/",
 	"remoteManifestUrl" : "http://kenkozheng.github.io/cocos/res/project.manifest",
 	"remoteVersionUrl" : "http://kenkozheng.github.io/cocos/res/version.manifest",
-	"version" : "1.0.7",
-	"engineVersion" : "3.0 beta",
+	"version" : "1.0.0",
+	"engineVersion" : "3.0 rc2",
 
 	"assets" : {
-		"src/app.zip" : {
-			"md5" : "6BDE724EBF6BB641E718D44D4AD5C18F",
-			"compressed": true
-		},
-		"src/test.zip" : {
-			"md5" : "2751C53CD4C606710895D40AE33694AE",
-			"compressed": true
-		}
 	},
     
     "searchPaths" : [
