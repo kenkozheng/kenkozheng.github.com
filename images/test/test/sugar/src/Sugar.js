@@ -5,9 +5,16 @@
 var Sugar = cc.Sprite.extend({
 
     type: 1,
+    /**
+     * 普通0，选中1，消除2
+     */
+    status:0,
+    effect:0,
 
     column: 0,
     row: 0,
+
+    effectLayer:null,
 
     ctor: function (type, column, row) {
         this._super();
@@ -16,13 +23,49 @@ var Sugar = cc.Sprite.extend({
 
     reuse: function (type, column, row) {
         this.setSpriteFrame("" + type + ".png");
+        this.status = Constant.STATUS_NORMAL;
         this.type = type;
         this.column = column;
         this.row = row;
+        this.effectLayer = null;
+        this.effect = Constant.EFFECT_NONE;
     },
 
     unuse: function () {
 		this.retain();
+        if(this.effectLayer) {
+            this.removeChild(this.effectLayer);
+            this.effectLayer = null;
+        }
+    },
+
+    markChosen: function (chosen) {
+        if(chosen){
+            this.setSpriteFrame("" + this.type + "_chosen.png");
+            this.status = Constant.STATUS_CHOSEN;
+        } else {
+            this.setSpriteFrame("" + this.type + ".png");
+            this.status = Constant.STATUS_NORMAL;
+        }
+    },
+
+    setEffect: function (effect) {
+        this.effect = effect;
+        this.markChosen(false);
+        if(effect == Constant.EFFECT_COLORFUL){
+            this.setSpriteFrame("colorful.png");
+        } else {
+            if(effect == Constant.EFFECT_HORIZONTAL){
+                this.effectLayer = new cc.Sprite("#horizontal.png");
+            } else if(effect == Constant.EFFECT_VERTICAL){
+                this.effectLayer = new cc.Sprite("#vertical.png");
+            } else if(effect == Constant.EFFECT_BOMB){
+                this.effectLayer = new cc.Sprite("#bomb.png");
+            }
+            this.effectLayer.x = Constant.SUGAR_WIDTH/2;
+            this.effectLayer.y = Constant.SUGAR_WIDTH/2;
+            this.addChild(this.effectLayer);
+        }
     }
 
 });
