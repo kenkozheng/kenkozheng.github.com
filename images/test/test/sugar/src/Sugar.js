@@ -33,6 +33,10 @@ var Sugar = cc.Sprite.extend({
 
     unuse: function () {
 		this.retain();
+        this._removeEffectLayer();
+    },
+
+    _removeEffectLayer: function () {
         if(this.effectLayer) {
             this.removeChild(this.effectLayer);
             this.effectLayer = null;
@@ -55,12 +59,21 @@ var Sugar = cc.Sprite.extend({
         if(effect == Constant.EFFECT_COLORFUL){
             this.setSpriteFrame("colorful.png");
         } else {
+            this._removeEffectLayer();
             if(effect == Constant.EFFECT_HORIZONTAL){
                 this.effectLayer = new cc.Sprite("#horizontal.png");
             } else if(effect == Constant.EFFECT_VERTICAL){
                 this.effectLayer = new cc.Sprite("#vertical.png");
             } else if(effect == Constant.EFFECT_BOMB){
                 this.effectLayer = new cc.Sprite("#bomb.png");
+            } else if(effect == Constant.EFFECT_BIG_BOMB){
+                this.effectLayer = new cc.Sprite("#big_bomb.png");
+            } else if(effect == Constant.EFFECT_CROSS){
+                this.effectLayer = new cc.Sprite("#cross.png");
+            } else if(effect == Constant.EFFECT_HORIZONTAL_BOMB){
+                this.effectLayer = new cc.Sprite("#horizontal_bomb.png");
+            } else if(effect == Constant.EFFECT_VERTICAL_BOMB){
+                this.effectLayer = new cc.Sprite("#vertical_bomb.png");
             }
             this.effectLayer.x = Constant.SUGAR_WIDTH/2;
             this.effectLayer.y = Constant.SUGAR_WIDTH/2;
