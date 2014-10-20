@@ -2,7 +2,7 @@
  * Created by Kenko on 2014/9/14.
  */
 
-var Sugar = cc.Sprite.extend({
+var Sugar = MapObject.extend({
 
     type: 1,
     /**

@@ -4,8 +4,8 @@
 
 var Constant = {
     SUGAR_WIDTH: 64,
-    SUGAR_COUNT: 10,
-    FALL_SPEED: 8,
+    MAP_SIZE: 10,
+    FALL_ACCELERATION: 30,
 
     STATUS_CHOSEN: 1,
     STATUS_NORMAL: 0,
@@ -27,6 +27,22 @@ var Constant = {
     EFFECT_HORIZONTAL_BOMB: 7,
     EFFECT_VERTICAL_BOMB: 8,
 
+    MAP_SUGAR: 0,
+    MAP_BLANK_HOLE: 1,
+    MAP_BLOCK: 2,
 
-    levels:[100000, 2000, 4000, 8000, 16000]
+    levels: [
+        {score: 100000, map: [
+            [0,0,1,1,1,0,0,0,0,0],
+            [0,0,1,1,1,0,0,0,0,0],
+            [0,0,2,0,0,1,1,1,0,0],
+            [0,0,2,0,0,0,1,1,1,0],
+            [0,1,1,1,0,0,0,0,0,0],
+            [0,2,0,0,1,1,1,0,0,0],
+            [0,0,1,1,1,0,0,0,0,0],
+            [1,1,1,0,0,0,2,0,0,0],
+            [0,0,0,0,1,1,1,0,0,0],
+            [0,0,1,1,1,0,0,0,0,0],
+        ]}
+    ]
 };

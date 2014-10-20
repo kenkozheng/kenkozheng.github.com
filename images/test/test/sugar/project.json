@@ -13,7 +13,10 @@
     "jsList" : [
         "src/resource.js",
         "src/Constant.js",
-        "src/Sugar.js",
+        "src/map/MapObject.js",
+        "src/map/BlankHole.js",
+        "src/map/Block.js",
+        "src/map/Sugar.js",
         "src/GameUI.js",
         "src/Game.js",
         "src/app.js"

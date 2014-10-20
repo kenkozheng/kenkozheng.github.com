@@ -2,7 +2,7 @@
 var GameLayer = cc.Layer.extend({
     sprite:null,
 
-    sugars:null,
+    map:null,
     moving:false,
     /**
      * 本次消除，被扫中的条纹糖数目
@@ -15,7 +15,7 @@ var GameLayer = cc.Layer.extend({
     popColumn:0,
     popRow:0,
 
-    sugarPanel:null,
+    mapPanel:null,
     effectPanel:null,
     ui:null,
 
@@ -36,37 +36,25 @@ var GameLayer = cc.Layer.extend({
 
         var clippingPanel = new cc.ClippingNode();
         this.addChild(clippingPanel, 2);
-        this.sugarPanel = new cc.SpriteBatchNode("res/images/sugar.png");
-        this.sugarPanel.x = (size.width - Constant.SUGAR_WIDTH*Constant.SUGAR_COUNT)/2;
-        this.sugarPanel.y = (size.height - Constant.SUGAR_WIDTH*Constant.SUGAR_COUNT)/2;
-        clippingPanel.addChild(this.sugarPanel, 1);
+        this.mapPanel = new cc.SpriteBatchNode("res/images/sugar.png");
+        this.mapPanel.x = (size.width - Constant.SUGAR_WIDTH*Constant.MAP_SIZE)/2;
+        this.mapPanel.y = (size.height - Constant.SUGAR_WIDTH*Constant.MAP_SIZE)/2;
+        clippingPanel.addChild(this.mapPanel, 1);
 
         this.effectPanel = new cc.Sprite();
         clippingPanel.addChild(this.effectPanel, 2);
 
         var stencil = new cc.DrawNode();
-        stencil.drawRect(cc.p(this.sugarPanel.x,this.sugarPanel.y), cc.p(this.sugarPanel.x+Constant.SUGAR_WIDTH*Constant.SUGAR_COUNT,this.sugarPanel.y+Constant.SUGAR_WIDTH*Constant.SUGAR_COUNT),
+        stencil.drawRect(cc.p(this.mapPanel.x,this.mapPanel.y), cc.p(this.mapPanel.x+Constant.SUGAR_WIDTH*Constant.MAP_SIZE,this.mapPanel.y+Constant.SUGAR_WIDTH*Constant.MAP_SIZE),
             cc.color(0,0,0), 1, cc.color(0,0,0));
         clippingPanel.stencil = stencil;
 
         if("touches" in cc.sys.capabilities)
-            cc.eventManager.addListener({event: cc.EventListener.TOUCH_ONE_BY_ONE, onTouchBegan: this._onTouchBegan.bind(this)}, this.sugarPanel);
+            cc.eventManager.addListener({event: cc.EventListener.TOUCH_ONE_BY_ONE, onTouchBegan: this._onTouchBegan.bind(this)}, this.mapPanel);
         else
-            cc.eventManager.addListener({event: cc.EventListener.MOUSE, onMouseDown: this._onMouseDown.bind(this)}, this.sugarPanel);
+            cc.eventManager.addListener({event: cc.EventListener.MOUSE, onMouseDown: this._onMouseDown.bind(this)}, this.mapPanel);
 
-        //init sugars
-        this.sugars = [];
-        for (var i = 0; i < Constant.SUGAR_COUNT; i++) {
-            var column = [];
-            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                var sugar = Sugar.create(parseInt(Math.random()*3) + 1, i, j);
-                this.sugarPanel.addChild(sugar);
-                sugar.x = i * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
-                sugar.y = j * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
-                column.push(sugar);
-            }
-            this.sugars.push(column);
-        }
+        this._initMap();
 
         this.ui = new GameUI();
         this.addChild(this.ui, 3);
@@ -82,47 +70,77 @@ var GameLayer = cc.Layer.extend({
         return true;
     },
 
+    _initMap: function () {
+        this.map = [];
+        for (var i = 0; i < Constant.MAP_SIZE; i++) {
+            var column = [];
+            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                var mapObject;
+                switch (Constant.levels[Game.level].map[i][j]){
+                    case Constant.MAP_SUGAR:
+                        mapObject = Sugar.create(parseInt(Math.random()*3) + 1, i, j);
+                        this.mapPanel.addChild(mapObject, 1);
+                        break;
+
+                    case Constant.MAP_BLOCK:
+                        mapObject = new Block();
+                        this.mapPanel.addChild(mapObject, 2);
+                        break;
+
+                    default:
+                        mapObject = new BlankHole();
+                        this.mapPanel.addChild(mapObject, 5);
+                        break;
+                }
+                mapObject.x = i * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
+                mapObject.y = j * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
+                column.push(mapObject);
+            }
+            this.map.push(column);
+        }
+    },
+
     _onTouchBegan: function (touch, event) {
-        var column = Math.floor((touch.getLocation().x - this.sugarPanel.x)/Constant.SUGAR_WIDTH);
-        var row = Math.floor((touch.getLocation().y - this.sugarPanel.y)/Constant.SUGAR_WIDTH);
+        var column = Math.floor((touch.getLocation().x - this.mapPanel.x)/Constant.SUGAR_WIDTH);
+        var row = Math.floor((touch.getLocation().y - this.mapPanel.y)/Constant.SUGAR_WIDTH);
         this._popSugars(column, row);
 		return true;
     },
 
     _onMouseDown: function (event) {
-        var column = Math.floor((event.getLocationX() - this.sugarPanel.x)/Constant.SUGAR_WIDTH);
-        var row = Math.floor((event.getLocationY() - this.sugarPanel.y)/Constant.SUGAR_WIDTH);
+        var column = Math.floor((event.getLocationX() - this.mapPanel.x)/Constant.SUGAR_WIDTH);
+        var row = Math.floor((event.getLocationY() - this.mapPanel.y)/Constant.SUGAR_WIDTH);
         this._popSugars(column, row);
     },
 
-    checkExist: function(i, j){
-        if(i >= 0 && i <= Constant.SUGAR_COUNT && j >= 0 && j <= Constant.SUGAR_COUNT){
-            return this.sugars[i][j].status != Constant.STATUS_DELETE;
+    checkSugarExist: function(i, j){
+        if(i >= 0 && i < Constant.MAP_SIZE && j >= 0 && j < Constant.MAP_SIZE){
+            return ((this.map[i][j] instanceof Sugar) && (this.map[i][j].status != Constant.STATUS_DELETE));
         }
         return false;
     },
 
     _popSugars: function (column, row) {
-		if(column < 0 || column >= Constant.SUGAR_COUNT || row < 0 || row >= Constant.SUGAR_COUNT)
+		if(column < 0 || column >= Constant.MAP_SIZE || row < 0 || row >= Constant.MAP_SIZE)
 			return;
-        if(this.moving)
+        if(this.moving || !(this.map[column][row] instanceof Sugar))
             return;
         this.popColumn = column;
         this.popRow = row;
 
-        if(this.sugars[column][row].effect == Constant.EFFECT_COLORFUL){
+        if(this.map[column][row].effect == Constant.EFFECT_COLORFUL){
             var random = [];
-            if(this.checkExist(column-1,row)){
-                random.push(this.sugars[column-1][row]);
+            if(this.checkSugarExist(column-1,row)){
+                random.push(this.map[column-1][row]);
             }
-            if(this.checkExist(column+1,row)){
-                random.push(this.sugars[column+1][row]);
+            if(this.checkSugarExist(column+1,row)){
+                random.push(this.map[column+1][row]);
             }
-            if(this.checkExist(column,row-1)){
-                random.push(this.sugars[column][row-1]);
+            if(this.checkSugarExist(column,row-1)){
+                random.push(this.map[column][row-1]);
             }
-            if(this.checkExist(column,row+1)){
-                random.push(this.sugars[column][row+1]);
+            if(this.checkSugarExist(column,row+1)){
+                random.push(this.map[column][row+1]);
             }
             var second = null;
             for (var i = 0; i < random.length; i++) {
@@ -134,10 +152,10 @@ var GameLayer = cc.Layer.extend({
             if(!second){
                 second = random[Math.floor(Math.random()*random.length)];
             }
-            this._showColorfulEffects(this.sugars[column][row], second);
+            this._showColorfulEffects(this.map[column][row], second);
         }else{
             ///find join sugars
-            var joinSugars = [this.sugars[column][row]];
+            var joinSugars = [this.map[column][row]];
             var index = 0;
             var pushIntoSugars = function(element){
                 if(joinSugars.indexOf(element) < 0)
@@ -145,17 +163,17 @@ var GameLayer = cc.Layer.extend({
             };
             while(index < joinSugars.length){
                 var sugar = joinSugars[index];
-                if(sugar.column > 0 && this.sugars[sugar.column-1][sugar.row].type == sugar.type){
-                    pushIntoSugars(this.sugars[sugar.column-1][sugar.row]);
+                if(this.checkSugarExist(sugar.column-1, sugar.row) && this.map[sugar.column-1][sugar.row].type == sugar.type){
+                    pushIntoSugars(this.map[sugar.column-1][sugar.row]);
                 }
-                if(sugar.column < Constant.SUGAR_COUNT-1 && this.sugars[sugar.column+1][sugar.row].type == sugar.type){
-                    pushIntoSugars(this.sugars[sugar.column+1][sugar.row]);
+                if(this.checkSugarExist(sugar.column+1, sugar.row) && this.map[sugar.column+1][sugar.row].type == sugar.type){
+                    pushIntoSugars(this.map[sugar.column+1][sugar.row]);
                 }
-                if(sugar.row > 0 && this.sugars[sugar.column][sugar.row-1].type == sugar.type){
-                    pushIntoSugars(this.sugars[sugar.column][sugar.row-1]);
+                if(this.checkSugarExist(sugar.column, sugar.row-1) && this.map[sugar.column][sugar.row-1].type == sugar.type){
+                    pushIntoSugars(this.map[sugar.column][sugar.row-1]);
                 }
-                if(sugar.row < Constant.SUGAR_COUNT-1 && this.sugars[sugar.column][sugar.row+1].type == sugar.type){
-                    pushIntoSugars(this.sugars[sugar.column][sugar.row+1]);
+                if(this.checkSugarExist(sugar.column, sugar.row+1) && this.map[sugar.column][sugar.row+1].type == sugar.type){
+                    pushIntoSugars(this.map[sugar.column][sugar.row+1]);
                 }
 
                 index++;
@@ -215,28 +233,28 @@ var GameLayer = cc.Layer.extend({
                         this.explodedLineSugarsCount++;
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p(0, sugar.row*Constant.SUGAR_WIDTH),
-                            cc.p(Constant.SUGAR_COUNT*Constant.SUGAR_WIDTH, (sugar.row+1)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
+                            cc.p(Constant.MAP_SIZE*Constant.SUGAR_WIDTH, (sugar.row+1)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
 
                     case Constant.EFFECT_VERTICAL:
                         this.explodedLineSugarsCount++;
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p(sugar.column*Constant.SUGAR_WIDTH, 0),
-                            cc.p((sugar.column+1)*Constant.SUGAR_WIDTH, Constant.SUGAR_COUNT*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
+                            cc.p((sugar.column+1)*Constant.SUGAR_WIDTH, Constant.MAP_SIZE*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
 
                     case Constant.EFFECT_BOMB:
                         this.explodedBombSugarsCount++;
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p((sugar.column-1)*Constant.SUGAR_WIDTH,(sugar.row-1)*Constant.SUGAR_WIDTH),
                             cc.p((sugar.column+2)*Constant.SUGAR_WIDTH,(sugar.row+2)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
@@ -249,8 +267,8 @@ var GameLayer = cc.Layer.extend({
                     case Constant.EFFECT_BIG_BOMB:
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p((sugar.column-2)*Constant.SUGAR_WIDTH,(sugar.row-2)*Constant.SUGAR_WIDTH),
                             cc.p((sugar.column+3)*Constant.SUGAR_WIDTH,(sugar.row+3)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
@@ -258,30 +276,30 @@ var GameLayer = cc.Layer.extend({
                     case Constant.EFFECT_CROSS:
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p(0, sugar.row*Constant.SUGAR_WIDTH),
-                            cc.p(Constant.SUGAR_COUNT*Constant.SUGAR_WIDTH, (sugar.row+1)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
+                            cc.p(Constant.MAP_SIZE*Constant.SUGAR_WIDTH, (sugar.row+1)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         effect.drawRect(cc.p(sugar.column*Constant.SUGAR_WIDTH, 0),
-                            cc.p((sugar.column+1)*Constant.SUGAR_WIDTH, Constant.SUGAR_COUNT*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
+                            cc.p((sugar.column+1)*Constant.SUGAR_WIDTH, Constant.MAP_SIZE*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
 
                     case Constant.EFFECT_HORIZONTAL_BOMB:
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p(0, (sugar.row-1)*Constant.SUGAR_WIDTH),
-                            cc.p(Constant.SUGAR_COUNT*Constant.SUGAR_WIDTH, (sugar.row+2)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
+                            cc.p(Constant.MAP_SIZE*Constant.SUGAR_WIDTH, (sugar.row+2)*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
 
                     case Constant.EFFECT_VERTICAL_BOMB:
                         var effect = new cc.DrawNode();
                         this.effectPanel.addChild(effect);
-                        effect.x = this.sugarPanel.x;
-                        effect.y = this.sugarPanel.y;
+                        effect.x = this.mapPanel.x;
+                        effect.y = this.mapPanel.y;
                         effect.drawRect(cc.p((sugar.column-1)*Constant.SUGAR_WIDTH, 0),
-                            cc.p((sugar.column+2)*Constant.SUGAR_WIDTH, Constant.SUGAR_COUNT*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
+                            cc.p((sugar.column+2)*Constant.SUGAR_WIDTH, Constant.MAP_SIZE*Constant.SUGAR_WIDTH), cc.color(255,255,255,180));
                         break;
                 }
             }
@@ -289,7 +307,7 @@ var GameLayer = cc.Layer.extend({
             function schedule() {
                 var newEffectSugars = [];
                 var checkAndRemoveSugar = (function(s){
-                    if(s && s.status != Constant.STATUS_DELETE){
+                    if(s && (s instanceof Sugar) && s.status != Constant.STATUS_DELETE){
                         if(s.effect != Constant.EFFECT_NONE && existEffectSugars.indexOf(s) < 0)
                             newEffectSugars.push(s);
                         this._removeSugar(s);
@@ -302,14 +320,14 @@ var GameLayer = cc.Layer.extend({
                     var sugar = existEffectSugars[i];
                     switch (sugar.effect){
                         case Constant.EFFECT_HORIZONTAL:
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                checkAndRemoveSugar(this.sugars[j][sugar.row]);
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                checkAndRemoveSugar(this.map[j][sugar.row]);
                             }
                             break;
 
                         case Constant.EFFECT_VERTICAL:
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                checkAndRemoveSugar(this.sugars[sugar.column][j]);
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                checkAndRemoveSugar(this.map[sugar.column][j]);
                             }
                             break;
 
@@ -318,8 +336,8 @@ var GameLayer = cc.Layer.extend({
                                 for (var k = -1; k <= 1; k++) {
                                     if(j == 0 && k == 0)
                                         continue;
-                                    if(sugar.column+j >= 0 && sugar.column+j < Constant.SUGAR_COUNT && sugar.row+k >= 0 && sugar.row+k < Constant.SUGAR_COUNT){
-                                        checkAndRemoveSugar(this.sugars[sugar.column+j][sugar.row+k]);
+                                    if(sugar.column+j >= 0 && sugar.column+j < Constant.MAP_SIZE && sugar.row+k >= 0 && sugar.row+k < Constant.MAP_SIZE){
+                                        checkAndRemoveSugar(this.map[sugar.column+j][sugar.row+k]);
                                     }
                                 }
                             }
@@ -328,9 +346,9 @@ var GameLayer = cc.Layer.extend({
                         //这里只会是爆炸过程中遇到的彩糖，全部消除
                         case Constant.EFFECT_COLORFUL:
                             newEffectSugars = [];
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                for (var k = 0; k < Constant.SUGAR_COUNT; k++) {
-                                    this._removeSugar(this.sugars[j][k]);
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                for (var k = 0; k < Constant.MAP_SIZE; k++) {
+                                    this._removeSugar(this.map[j][k]);
                                 }
                             }
                             colorfulStop = true;
@@ -342,34 +360,34 @@ var GameLayer = cc.Layer.extend({
                                 for (var k = -range; k <= range; k++) {
                                     if(j == 0 && k == 0)
                                         continue;
-                                    if(sugar.column+j >= 0 && sugar.column+j < Constant.SUGAR_COUNT && sugar.row+k >= 0 && sugar.row+k < Constant.SUGAR_COUNT){
-                                        checkAndRemoveSugar(this.sugars[sugar.column+j][sugar.row+k]);
+                                    if(sugar.column+j >= 0 && sugar.column+j < Constant.MAP_SIZE && sugar.row+k >= 0 && sugar.row+k < Constant.MAP_SIZE){
+                                        checkAndRemoveSugar(this.map[sugar.column+j][sugar.row+k]);
                                     }
                                 }
                             }
                             break;
 
                         case Constant.EFFECT_CROSS:
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                checkAndRemoveSugar(this.sugars[j][sugar.row]);
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                checkAndRemoveSugar(this.map[j][sugar.row]);
                             }
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                checkAndRemoveSugar(this.sugars[sugar.column][j]);
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                checkAndRemoveSugar(this.map[sugar.column][j]);
                             }
                             break;
 
                         case Constant.EFFECT_HORIZONTAL_BOMB:
-                            for (var k = Math.max(0,sugar.row-1); k < Constant.SUGAR_COUNT && k <= sugar.row + 1; k++) {
-                                for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                    checkAndRemoveSugar(this.sugars[j][k]);
+                            for (var k = Math.max(0,sugar.row-1); k < Constant.MAP_SIZE && k <= sugar.row + 1; k++) {
+                                for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                    checkAndRemoveSugar(this.map[j][k]);
                                 }
                             }
                             break;
 
                         case Constant.EFFECT_VERTICAL_BOMB:
-                            for (var k = Math.max(0,sugar.column-1); k < Constant.SUGAR_COUNT && k <= sugar.column + 1; k++) {
-                                for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                    checkAndRemoveSugar(this.sugars[k][j]);
+                            for (var k = Math.max(0,sugar.column-1); k < Constant.MAP_SIZE && k <= sugar.column + 1; k++) {
+                                for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                    checkAndRemoveSugar(this.map[k][j]);
                                 }
                             }
                             break;
@@ -399,13 +417,13 @@ var GameLayer = cc.Layer.extend({
                 if(secondSugar.effect == Constant.EFFECT_NONE){
                     //TODO 播放糖果抖动被消除的效果，特殊糖果有停留原地发光的效果
                     var existEffectSugars = [];
-                    for (var i = 0; i < Constant.SUGAR_COUNT; i++) {
-                        for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                            if(this.sugars[i][j] && this.sugars[i][j].type == secondSugar.type){
-                                if(this.sugars[i][j].effect != Constant.EFFECT_NONE){
-                                    existEffectSugars.push(this.sugars[i][j]);
+                    for (var i = 0; i < Constant.MAP_SIZE; i++) {
+                        for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                            if(this.map[i][j] && this.map[i][j].type == secondSugar.type){
+                                if(this.map[i][j].effect != Constant.EFFECT_NONE){
+                                    existEffectSugars.push(this.map[i][j]);
                                 }
-                                this._removeSugar(this.sugars[i][j]);
+                                this._removeSugar(this.map[i][j]);
                             }
                         }
                     }
@@ -414,29 +432,29 @@ var GameLayer = cc.Layer.extend({
                 } else {
                     if(secondSugar.effect == Constant.EFFECT_COLORFUL){
                         //TODO 播放糖果抖动被消除的效果
-                        for (var i = 0; i < Constant.SUGAR_COUNT; i++) {
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                this._removeSugar(this.sugars[i][j]);
+                        for (var i = 0; i < Constant.MAP_SIZE; i++) {
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                this._removeSugar(this.map[i][j]);
                             }
                         }
                         this._generateNewSugars();
                     }else{
                         //TODO 播放特效扩散到每个同色糖果的动画
-                        for (var i = 0; i < Constant.SUGAR_COUNT; i++) {
-                            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                if(this.sugars[i][j] && this.sugars[i][j].type == secondSugar.type
-                                    && this.sugars[i][j] != secondSugar && this.sugars[i][j].effect == Constant.EFFECT_NONE){
-                                    this.sugars[i][j].setEffect(secondSugar.effect);
+                        for (var i = 0; i < Constant.MAP_SIZE; i++) {
+                            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                if(this.map[i][j] && this.map[i][j].type == secondSugar.type
+                                    && this.map[i][j] != secondSugar && this.map[i][j].effect == Constant.EFFECT_NONE){
+                                    this.map[i][j].setEffect(secondSugar.effect);
                                 }
                             }
                         }
                         this.scheduleOnce((function(){
                             var existEffectSugars = [];
-                            for (var i = 0; i < Constant.SUGAR_COUNT; i++) {
-                                for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                                    if(this.sugars[i][j] && this.sugars[i][j].type == secondSugar.type && this.sugars[i][j] != secondSugar){
-                                        existEffectSugars.push(this.sugars[i][j]);
-                                        this._removeSugar(this.sugars[i][j]);
+                            for (var i = 0; i < Constant.MAP_SIZE; i++) {
+                                for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                                    if(this.map[i][j] && this.map[i][j].type == secondSugar.type && this.map[i][j] != secondSugar){
+                                        existEffectSugars.push(this.map[i][j]);
+                                        this._removeSugar(this.map[i][j]);
                                     }
                                 }
                             }
@@ -450,10 +468,10 @@ var GameLayer = cc.Layer.extend({
 
     _removeSugar: function (sugar) {
         //防止重复删除
-        if(sugar && this.sugars[sugar.column][sugar.row]){
+        if(sugar && sugar instanceof Sugar && this.map[sugar.column][sugar.row]){
             cc.pool.putInPool(sugar);
-            this.sugarPanel.removeChild(sugar);
-            this.sugars[sugar.column][sugar.row] = null;
+            this.mapPanel.removeChild(sugar);
+            this.map[sugar.column][sugar.row] = null;
         }
     },
 
@@ -464,8 +482,8 @@ var GameLayer = cc.Layer.extend({
      * @private
      */
     _checkEffectSugars: function (joinSugars) {
-        var beginColumn = Constant.SUGAR_COUNT;
-        var beginRow = Constant.SUGAR_COUNT;
+        var beginColumn = Constant.MAP_SIZE;
+        var beginRow = Constant.MAP_SIZE;
         var endColumn = 0;
         var endRow = 0;
         for (var i = 0; i < joinSugars.length; i++) {
@@ -475,13 +493,12 @@ var GameLayer = cc.Layer.extend({
             endRow = Math.max(joinSugars[i].row, endRow);
         }
 
-        var allSugars = this.sugars;
-        function checkExist(i, j){
+        var checkExist = (function(i, j){
             if(i >= beginColumn && i <= endColumn && j >= beginRow && j <= endRow){
-                return (allSugars[i][j].status != Constant.STATUS_DELETE && joinSugars.indexOf(allSugars[i][j]) >= 0);
+                return ((this.map[i][j] instanceof Sugar) && this.map[i][j].status != Constant.STATUS_DELETE && joinSugars.indexOf(this.map[i][j]) >= 0);
             }
             return false;
-        }
+        }).bind(this);
 
         //check colorful sugars and line sugars
         var colorfulSugars = [];
@@ -494,9 +511,9 @@ var GameLayer = cc.Layer.extend({
                         if(sequenceCount == 5) {
                             //标记这些糖已经被用了转为彩糖
                             for (var k = 0; k < 5; k++) {
-                                this.sugars[i-k][j].status = Constant.STATUS_DELETE;
+                                this.map[i-k][j].status = Constant.STATUS_DELETE;
                             }
-                            colorfulSugars.push(this.sugars[i-2][j]);
+                            colorfulSugars.push(this.map[i-2][j]);
                             sequenceCount = 0;
                         }
                     } else {
@@ -513,9 +530,9 @@ var GameLayer = cc.Layer.extend({
                         sequenceCount++;
                         if(sequenceCount == 5) {
                             for (var k = 0; k < 5; k++) {
-                                this.sugars[i][j-k].status = Constant.STATUS_DELETE;
+                                this.map[i][j-k].status = Constant.STATUS_DELETE;
                             }
-                            colorfulSugars.push(this.sugars[i][j-2]);
+                            colorfulSugars.push(this.map[i][j-2]);
                             sequenceCount = 0;
                         }
                     } else {
@@ -536,9 +553,9 @@ var GameLayer = cc.Layer.extend({
                         if(sequenceCount == 4) {
                             //标记这些糖已经被用了转为彩糖
                             for (var k = 0; k < 4; k++) {
-                                this.sugars[i-k][j].status = Constant.STATUS_DELETE;
+                                this.map[i-k][j].status = Constant.STATUS_DELETE;
                             }
-                            lineSugars.push(this.sugars[i-1][j]);
+                            lineSugars.push(this.map[i-1][j]);
                             sequenceCount = 0;
                         }
                     } else {
@@ -555,9 +572,9 @@ var GameLayer = cc.Layer.extend({
                         sequenceCount++;
                         if(sequenceCount == 4) {
                             for (var k = 0; k < 4; k++) {
-                                this.sugars[i][j-k].status = Constant.STATUS_DELETE;
+                                this.map[i][j-k].status = Constant.STATUS_DELETE;
                             }
-                            lineSugars.push(this.sugars[i][j-1]);
+                            lineSugars.push(this.map[i][j-1]);
                             sequenceCount = 0;
                         }
                     } else {
@@ -597,28 +614,28 @@ var GameLayer = cc.Layer.extend({
                         continue;
 
                     if(horizontal && vertical){
-                        bombSugars.push(this.sugars[i][j]);
+                        bombSugars.push(this.map[i][j]);
 
                         if(horizontal == 1){
-                            this.sugars[i-2][j].status = Constant.STATUS_DELETE;
-                            this.sugars[i-1][j].status = Constant.STATUS_DELETE;
+                            this.map[i-2][j].status = Constant.STATUS_DELETE;
+                            this.map[i-1][j].status = Constant.STATUS_DELETE;
                         }else if(horizontal == 2){
-                            this.sugars[i-1][j].status = Constant.STATUS_DELETE;
-                            this.sugars[i+1][j].status = Constant.STATUS_DELETE;
+                            this.map[i-1][j].status = Constant.STATUS_DELETE;
+                            this.map[i+1][j].status = Constant.STATUS_DELETE;
                         }else if(horizontal == 3){
-                            this.sugars[i+2][j].status = Constant.STATUS_DELETE;
-                            this.sugars[i+1][j].status = Constant.STATUS_DELETE;
+                            this.map[i+2][j].status = Constant.STATUS_DELETE;
+                            this.map[i+1][j].status = Constant.STATUS_DELETE;
                         }
 
                         if(vertical == 1){
-                            this.sugars[i][j-2].status = Constant.STATUS_DELETE;
-                            this.sugars[i][j-1].status = Constant.STATUS_DELETE;
+                            this.map[i][j-2].status = Constant.STATUS_DELETE;
+                            this.map[i][j-1].status = Constant.STATUS_DELETE;
                         }else if(vertical == 2){
-                            this.sugars[i][j-1].status = Constant.STATUS_DELETE;
-                            this.sugars[i][j+1].status = Constant.STATUS_DELETE;
+                            this.map[i][j-1].status = Constant.STATUS_DELETE;
+                            this.map[i][j+1].status = Constant.STATUS_DELETE;
                         }else if(vertical == 3){
-                            this.sugars[i][j+2].status = Constant.STATUS_DELETE;
-                            this.sugars[i][j+1].status = Constant.STATUS_DELETE;
+                            this.map[i][j+2].status = Constant.STATUS_DELETE;
+                            this.map[i][j+1].status = Constant.STATUS_DELETE;
                         }
                     }
                 }
@@ -648,8 +665,8 @@ var GameLayer = cc.Layer.extend({
             var sugar = Sugar.create(parseInt(Math.random()*5) + 1, this.popColumn, this.popRow);
             sugar.x = sugar.column * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
             sugar.y = sugar.row * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
-            this.sugarPanel.addChild(sugar);
-            this.sugars[sugar.column][sugar.row] = sugar;
+            this.mapPanel.addChild(sugar, 1);
+            this.map[sugar.column][sugar.row] = sugar;
 
             if(this.explodedBombSugarsCount >= 2){
                 sugar.setEffect(Constant.EFFECT_BIG_BOMB);
@@ -660,45 +677,63 @@ var GameLayer = cc.Layer.extend({
             }
             totalDeleted++;
         }
-        for (var i = 0; i < Constant.SUGAR_COUNT; i++) {        //deal each column
+        for (var i = 0; i < Constant.MAP_SIZE; i++) {        //deal each column
             var missCount = 0;
-            for (var j = 0; j < this.sugars[i].length; j++) {
-                var sugar = this.sugars[i][j];
-                if(!sugar){
-                    sugar = Sugar.create(parseInt(Math.random()*5) + 1, i, Constant.SUGAR_COUNT+missCount);
-                    this.sugarPanel.addChild(sugar);
-                    sugar.x = sugar.column * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
-                    sugar.y = sugar.row * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
-                    this.sugars[i].push(sugar);
-                    missCount++;
-                    totalDeleted++;
+            for (var j = 0; j < this.map[i].length; j++) {
+                if(this.map[i][j] && !(this.map[i][j] instanceof Sugar)){
                     continue;
                 }
 
-                var fallLength = 0;
-                //大于10，表示是刚新加的
-                if(j >= Constant.SUGAR_COUNT){
-                    fallLength = missCount;
-                } else {
-                    for (var k = 0; k < j; k++) {       //find out how long will each sugar falls
-                        if(this.sugars[i][k] == null){
-                            fallLength++;
-                        }
+                var blocksCountAbove = 0;
+                for (var k = j; k < Constant.MAP_SIZE; k++) {
+                    if(this.map[i][k] instanceof Block){
+                        blocksCountAbove++;
                     }
                 }
 
-                if(fallLength > 0){
-                    var duration = fallLength/Constant.FALL_SPEED;
-                    if(duration > maxTime)
-                        maxTime = duration;
-                    var move = cc.moveTo(duration, cc.p(sugar.x, sugar.y-Constant.SUGAR_WIDTH*fallLength));
-                    sugar.runAction(move);
-                    sugar.row -= fallLength;        //adjust all sugars' row
+                var sugar = this.map[i][j];
+                if(!sugar){
+                    totalDeleted++;
+                    if(blocksCountAbove == 0){
+                        sugar = Sugar.create(parseInt(Math.random()*5) + 1, i, Constant.MAP_SIZE+missCount);
+                        this.mapPanel.addChild(sugar);
+                        sugar.x = sugar.column * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
+                        sugar.y = sugar.row * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
+                        this.map[i].push(sugar);
+                        missCount++;
+                    }
+                }else{
+                    var fallLength = 0;
+                    var blankHoleCount = 0;
+                    for (var k = j - 1; k >= 0; k--) {       //find out how long will each sugar falls
+                        if(this.map[i][k]){
+                            if(this.map[i][k] instanceof Block){
+                                break;
+                            }else if(this.map[i][k] instanceof BlankHole){
+                                blankHoleCount++;
+                            }
+                        }else{
+                            fallLength += blankHoleCount + 1;   //先累计途中有多少个blankhole，如果真遇到空位，就把blankhole个数累计到falllength中。
+                            blankHoleCount = 0;
+                        }
+                    }
+
+                    if(fallLength > 0){
+                        var duration = Math.sqrt(2*fallLength/Constant.FALL_ACCELERATION);
+                        if(duration > maxTime)
+                            maxTime = duration;
+                        var move = cc.moveTo(duration, cc.p(sugar.x, sugar.y-Constant.SUGAR_WIDTH*fallLength)).easing(cc.easeIn(2));    //easeIn参数是幂，以几次幂加速
+                        sugar.runAction(move);
+                        sugar.row -= fallLength;        //adjust all sugars' row
+                        this.map[i][j] = null;
+                        this.map[i][sugar.row] = sugar;
+                    }
                 }
             }
-            for (var j = Constant.SUGAR_COUNT - 1; j >= 0; j--) {
-                if(this.sugars[i][j] == null)
-                    this.sugars[i].splice(j, 1);        //logically move all sugars, remove all blank holes
+
+            //移除超出地图的临时元素位置
+            for (var j = this.map[i].length; j >= Constant.MAP_SIZE; j--) {
+                this.map[i].splice(j, 1);
             }
         }
         this.scheduleOnce(this._finishSugarFalls.bind(this), maxTime);
@@ -712,7 +747,7 @@ var GameLayer = cc.Layer.extend({
     },
 
     _checkLevelSucceed: function () {
-        if(Game.score >= Constant.levels[Game.level]){
+        if(Game.score >= Constant.levels[Game.level].score){
             this.ui.showSuccess();
             this.scheduleOnce(function(){
                 Game.level++;
@@ -723,10 +758,10 @@ var GameLayer = cc.Layer.extend({
 
     traceSugars: function () {
         trace("============================")
-        for (var i = Constant.SUGAR_COUNT - 1; i >= 0; i--) {        //deal each row
+        for (var i = Constant.MAP_SIZE - 1; i >= 0; i--) {        //deal each row
             var row = [];
-            for (var j = 0; j < Constant.SUGAR_COUNT; j++) {
-                row.push(this.sugars[j][i]?this.sugars[j][i].type:0);
+            for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                row.push(this.map[j][i]?this.map[j][i].type:0);
             }
             trace(row);
         }
