@@ -147,10 +147,36 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
-            <key>bomb.png</key>
+            <key>blank_hole.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>block.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,266},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>bomb.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,398},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -248,7 +274,7 @@
             <key>size</key>
             <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:77856a46c03f8fb377e5e7f6f5ce8e72$</string>
+            <string>$TexturePacker:SmartUpdate:3cf7b6668e2252cbf2167f50cedba355$</string>
             <key>textureFileName</key>
             <string>sugar.png</string>
         </dict>
