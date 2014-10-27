@@ -181,7 +181,7 @@ var GameLayer = cc.Layer.extend({
     _popSugars: function (column, row) {
 		if(column < 0 || column >= Constant.MAP_SIZE || row < 0 || row >= Constant.MAP_SIZE)
 			return;
-        if(this.moving || !(this.map[column][row] instanceof Sugar))
+        if(this.moving || !(this.map[column][row] instanceof Sugar) || (this.map[column][row] instanceof SugarLock))
             return;
         this.popColumn = column;
         this.popRow = row;
