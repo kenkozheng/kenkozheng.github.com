@@ -15,10 +15,14 @@
         "src/Constant.js",
         "src/map/MapObject.js",
         "src/map/BlankHole.js",
-        "src/map/Block.js",
+        "src/map/Frosting.js",
+        "src/map/Whirlpool.js",
         "src/map/Sugar.js",
+        "src/map/SugarBomb.js",
+        "src/map/SugarLock.js",
         "src/GameUI.js",
         "src/Game.js",
+        "src/Config.js",
         "src/app.js"
     ]
 }

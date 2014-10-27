@@ -7,7 +7,7 @@
             <key>1.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{134,200},{64,64}}</string>
+                <string>{{68,332},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -20,7 +20,7 @@
             <key>1_chosen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{68,200},{64,64}}</string>
+                <string>{{134,266},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -33,7 +33,7 @@
             <key>2.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,200},{64,64}}</string>
+                <string>{{68,266},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -46,7 +46,7 @@
             <key>2_chosen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{134,134},{64,64}}</string>
+                <string>{{2,398},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -59,7 +59,7 @@
             <key>3.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{68,134},{64,64}}</string>
+                <string>{{2,332},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -72,7 +72,7 @@
             <key>3_chosen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,134},{64,64}}</string>
+                <string>{{2,266},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -85,7 +85,7 @@
             <key>4.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{134,68},{64,64}}</string>
+                <string>{{134,200},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -98,7 +98,7 @@
             <key>4_chosen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{68,68},{64,64}}</string>
+                <string>{{68,200},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -111,7 +111,7 @@
             <key>5.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,68},{64,64}}</string>
+                <string>{{2,200},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -124,7 +124,7 @@
             <key>5_chosen.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{134,2},{64,64}}</string>
+                <string>{{134,134},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -137,7 +137,7 @@
             <key>big_bomb.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{68,2},{64,64}}</string>
+                <string>{{68,134},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -150,20 +150,7 @@
             <key>blank_hole.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,2},{64,64}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{64,64}}</string>
-                <key>sourceSize</key>
-                <string>{64,64}</string>
-            </dict>
-            <key>block.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{68,266},{64,64}}</string>
+                <string>{{2,134},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -176,7 +163,7 @@
             <key>bomb.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,398},{64,64}}</string>
+                <string>{{134,68},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -189,7 +176,7 @@
             <key>colorful.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,332},{64,64}}</string>
+                <string>{{68,68},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -202,7 +189,33 @@
             <key>cross.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,266},{64,64}}</string>
+                <string>{{2,68},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>frosting_1.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{134,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>frosting_2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,2},{64,64}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -238,6 +251,84 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
+            <key>lock.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
+            <key>sugar_bomb_1.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{244,2},{8,23}}</string>
+                <key>offset</key>
+                <string>{0,2}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{7,5},{8,23}}</string>
+                <key>sourceSize</key>
+                <string>{22,37}</string>
+            </dict>
+            <key>sugar_bomb_2.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{238,68},{16,23}}</string>
+                <key>offset</key>
+                <string>{0,2}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{3,5},{16,23}}</string>
+                <key>sourceSize</key>
+                <string>{22,37}</string>
+            </dict>
+            <key>sugar_bomb_3.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{238,118},{14,23}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{4,6},{14,23}}</string>
+                <key>sourceSize</key>
+                <string>{22,37}</string>
+            </dict>
+            <key>sugar_bomb_4.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{234,143},{18,23}}</string>
+                <key>offset</key>
+                <string>{0,2}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{2,5},{18,23}}</string>
+                <key>sourceSize</key>
+                <string>{22,37}</string>
+            </dict>
+            <key>sugar_bomb_5.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{238,93},{14,23}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{4,6},{14,23}}</string>
+                <key>sourceSize</key>
+                <string>{22,37}</string>
+            </dict>
             <key>vertical.png</key>
             <dict>
                 <key>frame</key>
@@ -264,6 +355,19 @@
                 <key>sourceSize</key>
                 <string>{64,64}</string>
             </dict>
+            <key>whirlpool.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{68,398},{64,64}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{64,64}}</string>
+                <key>sourceSize</key>
+                <string>{64,64}</string>
+            </dict>
         </dict>
         <key>metadata</key>
         <dict>
@@ -274,7 +378,7 @@
             <key>size</key>
             <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3cf7b6668e2252cbf2167f50cedba355$</string>
+            <string>$TexturePacker:SmartUpdate:86ae5bcc0d361cd587833102380f603f$</string>
             <key>textureFileName</key>
             <string>sugar.png</string>
         </dict>

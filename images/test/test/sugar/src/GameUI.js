@@ -7,6 +7,7 @@ var GameUI = cc.Layer.extend({
     levelText:null,
     scoreText:null,
     stepText:null,
+    timeText:null,
 
     ctor: function () {
         this._super();
@@ -40,18 +41,25 @@ var GameUI = cc.Layer.extend({
         this.scoreText = scoreText;
 
         var stepLabel = new cc.LabelTTF("Step", "arial", 36);
-        stepLabel.x = 540;
+        stepLabel.x = 500;
         stepLabel.y = levelLabel.y;
         stepLabel.setColor(cc.color(0,0,0));
         this.addChild(stepLabel);
 
         var stepText = new cc.LabelTTF("1", "arial", 36);
-        stepText.x = 540;
+        stepText.x = 500;
         stepText.y = levelText.y;
         stepText.setColor(cc.color(0,0,0));
         this.addChild(stepText);
         this.stepText = stepText;
-		
+
+        var timeText = new cc.LabelTTF("0", "arial", 42);
+        timeText.x = 650;
+        timeText.y = levelText.y;
+        timeText.setColor(cc.color(0,0,0));
+        this.addChild(timeText);
+        this.timeText = timeText;
+
 		var closeItem = new cc.MenuItemImage(
 			res.CloseNormal_png,
 			res.CloseSelected_png,
@@ -88,10 +96,28 @@ var GameUI = cc.Layer.extend({
         bg.addChild(stepText);
     },
 
+    showFail: function () {
+        var bg = new cc.LayerColor(cc.color(255,255,255),500,500);
+        this.addChild(bg, 1);
+        var size = cc.director.getWinSize();
+        bg.x = (size.width - bg.width)/2;
+        bg.y = (size.height - bg.height)/2;
+        var stepText = new cc.LabelTTF("失败了，3秒后重玩", "arial", 56);
+        stepText.setColor(cc.color(0,0,0));
+        stepText.x = 250;
+        stepText.y = 250;
+        bg.addChild(stepText);
+    },
+
     update: function () {
         this.levelText.setString("" + (Game.level+1));
         this.scoreText.setString("" + Game.score);
         this.stepText.setString("" + Game.steps);
+
+        var limit = Config.levels[Game.level].limit;
+        if(!limit.step && limit.time){
+            this.timeText.setString("" + Math.max(0, limit.time - Game.timeElapsed));
+        }
     }
 
 });

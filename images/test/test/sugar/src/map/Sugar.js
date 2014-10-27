@@ -4,20 +4,20 @@
 
 var Sugar = MapObject.extend({
 
-    type: 1,
+    block:false,
+    recycle:true,
+
+    type: 0,
     /**
      * 普通0，选中1，消除2
      */
     status:0,
     effect:0,
 
-    column: 0,
-    row: 0,
-
     effectLayer:null,
 
     ctor: function (type, column, row) {
-        this._super();
+        this._super(column, row);
         this.reuse(type, column, row);
     },
 
@@ -45,7 +45,11 @@ var Sugar = MapObject.extend({
 
     markChosen: function (chosen) {
         if(chosen){
-            this.setSpriteFrame("" + this.type + "_chosen.png");
+            if(this.effect == Constant.EFFECT_COLORFUL){
+                //TODO 彩糖的选中态
+            }else{
+                this.setSpriteFrame("" + this.type + "_chosen.png");
+            }
             this.status = Constant.STATUS_CHOSEN;
         } else {
             this.setSpriteFrame("" + this.type + ".png");
@@ -57,6 +61,7 @@ var Sugar = MapObject.extend({
         this.effect = effect;
         this.markChosen(false);
         if(effect == Constant.EFFECT_COLORFUL){
+            this.type = 0;
             this.setSpriteFrame("colorful.png");
         } else {
             this._removeEffectLayer();
@@ -83,11 +88,11 @@ var Sugar = MapObject.extend({
 
 });
 
-Sugar.create = function (type, column, row) {
+Sugar.create = function (column, row, type) {
+    type = type || parseInt(Math.random()*Constant.SUGAR_TYPE_COUNT) + 1;
     if (cc.pool.hasObject(Sugar)) {
         return cc.pool.getFromPool(Sugar, type, column, row);
-    }
-    else {
+    } else {
         return new Sugar(type, column, row);
     }
 }

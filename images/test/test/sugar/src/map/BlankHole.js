@@ -4,8 +4,11 @@
 
 var BlankHole = MapObject.extend({
 
-    ctor: function () {
-        this._super("#blank_hole.png");
+    block:false,
+    depth:5,
+
+    ctor: function (column, row) {
+        this._super(column, row, "blank_hole.png");
     }
 
 });
