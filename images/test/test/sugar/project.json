@@ -11,6 +11,7 @@
     "modules" : ["cocos2d", "ccpool"],
 
     "jsList" : [
+        "src/shader/Filter.js",
         "src/resource.js",
         "src/Constant.js",
         "src/map/MapObject.js",
@@ -23,6 +24,7 @@
         "src/GameUI.js",
         "src/Game.js",
         "src/Config.js",
-        "src/app.js"
+        "src/GameScene.js",
+        "src/LevelListScene.js"
     ]
 }

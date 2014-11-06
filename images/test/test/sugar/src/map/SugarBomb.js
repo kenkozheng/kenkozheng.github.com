@@ -13,7 +13,7 @@ var SugarBomb = Sugar.extend({
     _text:null,
 
     ctor: function (column, row, steps) {
-        this._super(parseInt(Math.random()*Constant.SUGAR_TYPE_COUNT) + 1, column, row);
+        this._super(Sugar.randomType(), column, row);
         this.steps = steps;
         var text = new cc.Sprite("#sugar_bomb_" + steps + ".png");
         text.x = Constant.SUGAR_WIDTH/2;

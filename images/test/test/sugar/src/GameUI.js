@@ -102,7 +102,7 @@ var GameUI = cc.Layer.extend({
         var size = cc.director.getWinSize();
         bg.x = (size.width - bg.width)/2;
         bg.y = (size.height - bg.height)/2;
-        var stepText = new cc.LabelTTF("失败了，3秒后重玩", "arial", 56);
+        var stepText = new cc.LabelTTF("失败了", "arial", 56);
         stepText.setColor(cc.color(0,0,0));
         stepText.x = 250;
         stepText.y = 250;

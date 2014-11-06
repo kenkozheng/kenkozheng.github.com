@@ -88,11 +88,28 @@ var Sugar = MapObject.extend({
 
 });
 
+Sugar.randomType = function () {
+    var config = Config.levels[Game.level].rates;
+    var total = 0;
+    for (var i = 0; i < config.length; i++) {
+        total += config[i];
+    }
+    var rate = Math.random();
+    var temp = 0;
+    for (var i = 0; i < config.length; i++) {
+        temp += config[i];
+        if(rate <= temp/total){
+            return i + 1;
+        }
+    }
+    return Constant.SUGAR_TYPE_COUNT;
+};
+
 Sugar.create = function (column, row, type) {
-    type = type || parseInt(Math.random()*Constant.SUGAR_TYPE_COUNT) + 1;
+    type = type || Sugar.randomType();
     if (cc.pool.hasObject(Sugar)) {
         return cc.pool.getFromPool(Sugar, type, column, row);
     } else {
         return new Sugar(type, column, row);
     }
-}
+};
