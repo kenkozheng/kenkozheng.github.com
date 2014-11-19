@@ -29,7 +29,7 @@ var PerformanceTest = cc.Scene.extend({
 
 cc.game.onStart = function(){
     cc.view.adjustViewPort(true);
-    cc.view.setDesignResolutionSize(720, 1280, cc.ResolutionPolicy.SHOW_ALL);
+    cc.view.setDesignResolutionSize(300, 400, cc.ResolutionPolicy.SHOW_ALL);
     cc.view.resizeWithBrowserSize(true);
     //load resources
     cc.LoaderScene.preload(["res/grossini.png"], function () {
