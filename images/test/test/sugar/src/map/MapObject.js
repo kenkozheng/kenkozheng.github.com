@@ -4,6 +4,10 @@
 
 var MapObject = cc.Sprite.extend({
 
+    /**
+     * 对应Constant地图元素类型
+     */
+    objectCode:0,
     row:0,
     column:0,
 
@@ -14,7 +18,7 @@ var MapObject = cc.Sprite.extend({
     /**
      * UI的深度
      */
-    depth:1,
+    depth:2,
 
     ctor: function (column, row, texture) {
         this._super();

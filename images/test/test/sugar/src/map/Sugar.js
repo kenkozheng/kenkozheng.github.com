@@ -5,7 +5,6 @@
 var Sugar = MapObject.extend({
 
     block:false,
-    recycle:true,
 
     type: 0,
     /**
@@ -15,6 +14,7 @@ var Sugar = MapObject.extend({
     effect:0,
 
     effectLayer:null,
+    image:null,
 
     ctor: function (type, column, row) {
         this._super(column, row);
@@ -22,7 +22,14 @@ var Sugar = MapObject.extend({
     },
 
     reuse: function (type, column, row) {
-        this.setSpriteFrame("" + type + ".png");
+        if(!this.image){
+            this.image = new cc.Sprite();
+            this.image.x = Constant.SUGAR_WIDTH/2;
+            this.image.y = Constant.SUGAR_WIDTH/2;
+            this.addChild(this.image, 2);
+        }
+        this.image.setSpriteFrame("" + type + ".png");
+        this.setSpriteFrame("sugar_bg.png");
         this.status = Constant.STATUS_NORMAL;
         this.type = type;
         this.column = column;
@@ -48,7 +55,7 @@ var Sugar = MapObject.extend({
             if(this.effect == Constant.EFFECT_COLORFUL){
                 //TODO 彩糖的选中态
             }else{
-                this.setSpriteFrame("" + this.type + "_chosen.png");
+                this.image.setSpriteFrame("" + this.type + "_1.png");
             }
             this.status = Constant.STATUS_CHOSEN;
         } else {
@@ -62,51 +69,44 @@ var Sugar = MapObject.extend({
         this.markChosen(false);
         if(effect == Constant.EFFECT_COLORFUL){
             this.type = 0;
-            this.setSpriteFrame("colorful.png");
+            this.image.setSpriteFrame("colorful.png");
         } else {
             this._removeEffectLayer();
-            if(effect == Constant.EFFECT_HORIZONTAL){
-                this.effectLayer = new cc.Sprite("#horizontal.png");
-            } else if(effect == Constant.EFFECT_VERTICAL){
-                this.effectLayer = new cc.Sprite("#vertical.png");
-            } else if(effect == Constant.EFFECT_BOMB){
-                this.effectLayer = new cc.Sprite("#bomb.png");
-            } else if(effect == Constant.EFFECT_BIG_BOMB){
-                this.effectLayer = new cc.Sprite("#big_bomb.png");
-            } else if(effect == Constant.EFFECT_CROSS){
-                this.effectLayer = new cc.Sprite("#cross.png");
-            } else if(effect == Constant.EFFECT_HORIZONTAL_BOMB){
-                this.effectLayer = new cc.Sprite("#horizontal_bomb.png");
-            } else if(effect == Constant.EFFECT_VERTICAL_BOMB){
-                this.effectLayer = new cc.Sprite("#vertical_bomb.png");
+            if(effect != Constant.EFFECT_NONE){
+
+                this.effectLayer = new cc.Sprite("#effect_" + 6 + "/1.png");
+                var animationFrames = [];
+                for (var i = 1; i <= 3; i++) {
+                    animationFrames.push(cc.spriteFrameCache.getSpriteFrame("effect_" + 6 + "/" + i + ".png"));
+                }
+                var animation = new cc.Animation(animationFrames, 0.1);
+                this.effectLayer.runAction(cc.animate(animation).repeatForever());
+
+//                if(effect == Constant.EFFECT_HORIZONTAL){
+//                    this.effectLayer = new cc.Sprite("#horizontal.png");
+//                } else if(effect == Constant.EFFECT_VERTICAL){
+//                    this.effectLayer = new cc.Sprite("#vertical.png");
+//                } else if(effect == Constant.EFFECT_BOMB){
+//                    this.effectLayer = new cc.Sprite("#bomb.png");
+//                } else if(effect == Constant.EFFECT_BIG_BOMB){
+//                    this.effectLayer = new cc.Sprite("#big_bomb.png");
+//                } else if(effect == Constant.EFFECT_CROSS){
+//
+//                } else if(effect == Constant.EFFECT_HORIZONTAL_BOMB){
+//                    this.effectLayer = new cc.Sprite("#horizontal_bomb.png");
+//                } else if(effect == Constant.EFFECT_VERTICAL_BOMB){
+//                    this.effectLayer = new cc.Sprite("#vertical_bomb.png");
+//                }
+                this.effectLayer.x = Constant.SUGAR_WIDTH/2;
+                this.effectLayer.y = Constant.SUGAR_WIDTH/2;
+                this.addChild(this.effectLayer, 1);
             }
-            this.effectLayer.x = Constant.SUGAR_WIDTH/2;
-            this.effectLayer.y = Constant.SUGAR_WIDTH/2;
-            this.addChild(this.effectLayer);
         }
     }
 
 });
 
-Sugar.randomType = function () {
-    var config = Config.levels[Game.level].rates;
-    var total = 0;
-    for (var i = 0; i < config.length; i++) {
-        total += config[i];
-    }
-    var rate = Math.random();
-    var temp = 0;
-    for (var i = 0; i < config.length; i++) {
-        temp += config[i];
-        if(rate <= temp/total){
-            return i + 1;
-        }
-    }
-    return Constant.SUGAR_TYPE_COUNT;
-};
-
 Sugar.create = function (column, row, type) {
-    type = type || Sugar.randomType();
     if (cc.pool.hasObject(Sugar)) {
         return cc.pool.getFromPool(Sugar, type, column, row);
     } else {

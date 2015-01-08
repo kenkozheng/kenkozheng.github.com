@@ -21,7 +21,6 @@ var LevelListLayer = cc.Layer.extend({
         }
         if(length%5 > 0 && length > 5)
             args.push(length%5);
-        trace(args);
         menu.alignItemsInColumns.apply(menu, args);
 
         cc.eventManager.addListener({
@@ -34,8 +33,7 @@ var LevelListLayer = cc.Layer.extend({
     },
 
     menuItemClickHandler: function (target) {
-        Game.level = parseInt(target.name);
-        cc.director.runScene(new GameScene());
+        cc.director.runScene(new GameScene(parseInt(target.name)));
     }
 });
 

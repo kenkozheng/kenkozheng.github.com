@@ -8,18 +8,17 @@
 var SugarBomb = Sugar.extend({
 
     block:true,
-    recycle:false,
     steps:0,
     _text:null,
 
-    ctor: function (column, row, steps) {
-        this._super(Sugar.randomType(), column, row);
+    ctor: function (column, row, steps, type) {
+        this._super(type, column, row);
         this.steps = steps;
         var text = new cc.Sprite("#sugar_bomb_" + steps + ".png");
         text.x = Constant.SUGAR_WIDTH/2;
         text.y = Constant.SUGAR_WIDTH/2;
         text.scale = 1.5;
-        this.addChild(text);
+        this.addChild(text, 5);
         this._text = text;
     },
 

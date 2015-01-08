@@ -3,8 +3,8 @@
  */
 
 var Constant = {
-    SUGAR_WIDTH: 64,
-    SUGAR_TYPE_COUNT: 3,
+    SUGAR_WIDTH: 72,
+    SUGAR_TYPE_COUNT: 5,
     MAP_SIZE: 10,
     FALL_ACCELERATION: 30,
 
@@ -39,5 +39,19 @@ var Constant = {
     MAP_SUGAR_BOMB: 2,
     MAP_FROSTING: 3,
     MAP_WHIRLPOOL: 4,
-    MAP_SUGAR_LOCK: 5
+    MAP_SUGAR_LOCK: 5,
+    MAP_CHOCOLATE: 6,
+    MAP_CHOCOLATE_MACHINE: 7,
+
+    /**
+     * 道具类型，从1开始
+     */
+    PROP_HAMMER: 1,
+    PROP_ROCKET: 2,
+    PROP_MORE_TIME: 3,
+    PROP_MORE_STEP: 4,
+
+    PROP_HAMMER_RANGE: 1,
+    PROP_MORE_STEP_COUNT: 3,
+    PROP_MORE_TIME_COUNT: 20
 };

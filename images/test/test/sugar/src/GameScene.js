@@ -5,6 +5,22 @@ var GameLayer = cc.Layer.extend({
     effectPanel:null,
     ui:null,
 
+
+    /**
+     * 本关卡的数据
+     * ============================
+     */
+    score:0,
+    level:0,
+    steps:0,
+    timeElapsed:0,
+    sugarPopCount:null,
+    chocolateMachine:null,
+    /**
+     * =============================
+     */
+
+
     map:null,
     /**
      * 已选中的糖果
@@ -12,17 +28,34 @@ var GameLayer = cc.Layer.extend({
     chosenSugars:null,
 
     /**
+     * 以下属性都是点击糖果过程中，用于临时计算分数或效果的变量
+     * ==============================
+     */
+
+    /**
      * 糖果还在移动，不接受再次点击
      */
     moving:false,
     /**
-     * 本次消除，被扫中的条纹糖数目
+     * 本次（一次点击）消除，被扫中的条纹糖数目
      */
     popLineSugarsCount:0,
     /**
      * 本次消除，被扫中的包装糖数目
      */
     popBombSugarsCount:0,
+    /**
+     * {Array} 本轮消除的糖数（一轮概念：点击之后可能有特殊糖，特殊糖爆炸可能又引起特殊糖爆炸，这里分一轮一轮）
+     */
+    popSugarCount:null,
+    /**
+     * {Object} 本轮消除的特效糖统计
+     */
+    popSpecialSugarCount:null,
+    /**
+     * {Object} 本轮消除的障碍物统计
+     */
+    popBlockCount:null,
     /**
      * 点击的位置
      */
@@ -40,9 +73,22 @@ var GameLayer = cc.Layer.extend({
      * 标记特殊糖爆炸过程中是否遇到甘草漩涡
      */
     hitWhirlpool:false,
+    /**
+     * 本轮点击是否消灭了巧克力
+     */
+    chocolateDeleted:false,
+    /**
+     * 点了道具按钮
+     */
+    usingPropId:0,
+    /**
+     * 由于玩家可以道具放宽限制，所以这里要复制一份出来
+     */
+    limitStep:0,
+    limitTime:0,
 
 
-    ctor:function () {
+    ctor:function (level) {
         this._super();
 
         var size = cc.winSize;
@@ -73,9 +119,9 @@ var GameLayer = cc.Layer.extend({
         else
             cc.eventManager.addListener({event: cc.EventListener.MOUSE, onMouseDown: this._onMouseDown.bind(this)}, this.mapPanel);
 
-        this._init();
+        this._init(level);
 
-        this.ui = new GameUI();
+        this.ui = new GameUI(this);
         this.addChild(this.ui, 3);
 
             cc.eventManager.addListener({
@@ -89,27 +135,40 @@ var GameLayer = cc.Layer.extend({
         return true;
     },
 
-    _init: function () {
-        Game.score = 0;
-        Game.steps = 0;
-        Game.sugarPopCount = [0,0,0,0,0];
-        Game.timeElapsed = 0;
-        this.schedule((function(){
-            Game.timeElapsed++;
-            if(!Config.levels[Game.level].limit.step){
+    _init: function (level) {
+        this.score = 0;
+        this.steps = 0;
+        this.sugarPopCount = [];
+        for (var i = 0; i < Constant.SUGAR_TYPE_COUNT; i++) {
+            this.sugarPopCount[i] = 0;
+        }
+        this.timeElapsed = 0;
+        this.level = level;
+
+        this.limitStep = Config.levels[this.level].limit.step;
+        this.limitTime = Config.levels[this.level].limit.time;
+        if(!this.limitStep){
+            this.schedule((function(){
+                this.timeElapsed++;
                 this._checkLevelSucceedOrFail();
-            }
-        }).bind(this), 1);
+            }).bind(this), 1);
+        }
 
         this.map = [];
         for (var i = 0; i < Constant.MAP_SIZE; i++) {
             var column = [];
             for (var j = 0; j < Constant.MAP_SIZE; j++) {
-                var objectConfig = Config.levels[Game.level].map[i][j];
+                var objectConfig = Config.levels[this.level].map[i][j];
                 var mapObject = this._generateMapObject(objectConfig, i, j);
                 this.mapPanel.addChild(mapObject, mapObject.depth);
                 mapObject.x = i * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
                 mapObject.y = j * Constant.SUGAR_WIDTH + Constant.SUGAR_WIDTH/2;
+                if(!(mapObject instanceof BlankHole)){
+                    var bg = new cc.Sprite("#sugar_bg.png");
+                    this.mapPanel.addChild(bg, 1);
+                    bg.x = mapObject.x;
+                    bg.y = mapObject.y;
+                }
                 column.push(mapObject);
             }
             this.map.push(column);
@@ -130,7 +189,7 @@ var GameLayer = cc.Layer.extend({
         var objectParam = config.toString().substring(1); //后续的数字是参数
         switch (objectCode){
             case Constant.MAP_SUGAR:
-                mapObject = Sugar.create(column, row);
+                mapObject = Sugar.create(column, row, this._randomSugarType());
                 break;
 
             case Constant.MAP_FROSTING:
@@ -140,7 +199,7 @@ var GameLayer = cc.Layer.extend({
 
             case Constant.MAP_SUGAR_BOMB:
                 var steps = parseInt(objectParam[0]);
-                mapObject = new SugarBomb(column, row, steps);
+                mapObject = new SugarBomb(column, row, steps, this._randomSugarType());
                 break;
 
             case Constant.MAP_WHIRLPOOL:
@@ -148,27 +207,70 @@ var GameLayer = cc.Layer.extend({
                 break;
 
             case Constant.MAP_SUGAR_LOCK:
-                mapObject = new SugarLock(column, row);
+                mapObject = new SugarLock(column, row, this._randomSugarType());
+                break;
+
+            case Constant.MAP_CHOCOLATE:
+                mapObject = new Chocolate(column, row);
+                break;
+
+            case Constant.MAP_CHOCOLATE_MACHINE:
+                mapObject = new ChocolateMachine(column, row);
+                this.chocolateMachine = mapObject;
                 break;
 
             default:
                 mapObject = new BlankHole(column, row);
                 break;
         }
+        mapObject.objectCode = objectCode;
         return mapObject;
+    },
+
+    _randomSugarType: function () {
+        var config = Config.levels[this.level].rates;
+        var total = 0;
+        for (var i = 0; i < config.length; i++) {
+            total += config[i];
+        }
+        var rate = Math.random();
+        var temp = 0;
+        for (var i = 0; i < config.length; i++) {
+            temp += config[i];
+            if(rate <= temp/total){
+                return i + 1;
+            }
+        }
+        return Constant.SUGAR_TYPE_COUNT;
     },
 
     _onTouchBegan: function (touch, event) {
         var column = Math.floor((touch.getLocation().x - this.mapPanel.x)/Constant.SUGAR_WIDTH);
         var row = Math.floor((touch.getLocation().y - this.mapPanel.y)/Constant.SUGAR_WIDTH);
-        this._popSugars(column, row);
+        this._handleClickOrTouch(column, row);
 		return true;
     },
 
     _onMouseDown: function (event) {
         var column = Math.floor((event.getLocationX() - this.mapPanel.x)/Constant.SUGAR_WIDTH);
         var row = Math.floor((event.getLocationY() - this.mapPanel.y)/Constant.SUGAR_WIDTH);
-        this._popSugars(column, row);
+        this._handleClickOrTouch(column, row);
+    },
+
+    _handleClickOrTouch: function (column, row) {
+        if(column < 0 || column >= Constant.MAP_SIZE || row < 0 || row >= Constant.MAP_SIZE){
+            if(this.chosenSugars){
+                for (var i = 0; i < this.chosenSugars.length; i++) {
+                    this.chosenSugars[i].markChosen(false);
+                }
+            }
+            return;
+        }
+        if(this.usingPropId){
+            this._useProp(column, row);
+        }else{
+            this._popSugars(column, row);
+        }
     },
 
     _checkSugarExist: function(i, j){
@@ -179,8 +281,6 @@ var GameLayer = cc.Layer.extend({
     },
 
     _popSugars: function (column, row) {
-		if(column < 0 || column >= Constant.MAP_SIZE || row < 0 || row >= Constant.MAP_SIZE)
-			return;
         if(this.moving || !(this.map[column][row] instanceof Sugar) || (this.map[column][row] instanceof SugarLock))
             return;
         this.popColumn = column;
@@ -210,6 +310,8 @@ var GameLayer = cc.Layer.extend({
             if(!second){
                 second = random[Math.floor(Math.random()*random.length)];
             }
+            this.steps++;
+            this._onePopActionBegin();
             this._showColorfulEffects(this.map[column][row], second);
         }else{
             ///find join sugars
@@ -251,13 +353,8 @@ var GameLayer = cc.Layer.extend({
                 }
                 this.chosenSugars = joinSugars;
             } else {
-                Game.steps++;
-                this.moving = true;
-                this.popBombSugarsCount = 0;
-                this.popLineSugarsCount = 0;
-                this.explodeRound = 0;
-                this.frostingDecreaseRecord = [];
-                this.hitWhirlpool = false;
+                this.steps++;
+                this._onePopActionBegin();
 
                 var existEffectSugars = [];
                 for (var i = 0; i < joinSugars.length; i++) {
@@ -283,16 +380,37 @@ var GameLayer = cc.Layer.extend({
     },
 
     /**
+     * 用于初始化一些统计字段
+     * @private
+     */
+    _onePopActionBegin: function () {
+        this.moving = true;
+        this.popBombSugarsCount = 0;
+        this.popLineSugarsCount = 0;
+        this.explodeRound = 0;
+        this.frostingDecreaseRecord = [];
+        this.hitWhirlpool = false;
+        this.popSugarCount = [];
+        this.popSpecialSugarCount = {};
+        this.popBlockCount = {};
+        this.chocolateDeleted = false;
+    },
+
+    /**
      * 展示特殊糖果作用（连环爆炸）
      * @param existEffectSugars
      * @private
      */
     _showSugarEffects: function (existEffectSugars) {
         this.explodeRound++;
+        this.score += calculateScore(this.popSugarCount, this.popSpecialSugarCount, this.popBlockCount);
+        this.popBombSugarsCount = [];
+        this.popBlockCount = {};
+        this.popSpecialSugarCount = {};
 
         //先展示效果
         if(existEffectSugars.length && !this.hitWhirlpool){
-            var randomType = this._findRandomSugarType();
+            var randomType = 0; //用于彩糖效果
             for (var i = 0; i < existEffectSugars.length; i++) {
                 var sugar = existEffectSugars[i];
                 switch (sugar.effect){
@@ -329,6 +447,7 @@ var GameLayer = cc.Layer.extend({
                     case Constant.EFFECT_COLORFUL:
                         //TODO 全部晃动
                         trace("遇到彩糖");
+                        randomType = this._findExistSugarRandomType();
                         break;
 
                     case Constant.EFFECT_BIG_BOMB:
@@ -503,14 +622,18 @@ var GameLayer = cc.Layer.extend({
                                 this._removeMapObject(this.map[i][j]);
                             }
                         }
-                        this._generateNewSugars();
+                        this._showSugarEffects([]);
                     }else{
                         //TODO 播放特效扩散到每个同色糖果的动画
                         for (var i = 0; i < Constant.MAP_SIZE; i++) {
                             for (var j = 0; j < Constant.MAP_SIZE; j++) {
                                 if(this.map[i][j] && this.map[i][j].type == secondSugar.type
                                     && this.map[i][j] != secondSugar && this.map[i][j].effect == Constant.EFFECT_NONE){
-                                    this.map[i][j].setEffect(secondSugar.effect);
+                                    if(this.map[i][j] instanceof SugarLock){
+                                        this._removeMapObject(this.map[i][j]);
+                                    }else{
+                                        this.map[i][j].setEffect(secondSugar.effect);
+                                    }
                                 }
                             }
                         }
@@ -535,24 +658,55 @@ var GameLayer = cc.Layer.extend({
         }).bind(this), 0.5);
     },
 
-    _removeMapObject: function (object) {
+    /**
+     *
+     * @param object
+     * @param removeAll {boolean} 用于道具的情况，一次把整个格子删除，不管是糖霜还是甘草锁
+     * @private
+     */
+    _removeMapObject: function (object, removeAll) {
         //防止重复删除
-        if(object && (!(object instanceof BlankHole)) && this.map[object.column][object.row]){
-            if(!(object instanceof Frosting && object.level > 0)){
-                if(object.recycle){
+        if(object && (!(object instanceof BlankHole)) && (!(object instanceof ChocolateMachine)) && this.map[object.column][object.row]){
+            if(removeAll){
+                //锤子的情况
+                if(object.objectCode == Constant.MAP_SUGAR){
+                    this._showSugarDeletedEffect(object);
                     cc.pool.putInPool(object);
                 }
                 this.mapPanel.removeChild(object);
                 this.map[object.column][object.row] = null;
-                //只有特殊爆炸才能炸掉甘草锁糖果，然后换成普通糖果
-                if(object instanceof SugarLock){
-                    var sugar = Sugar.create(object.column, object.row, object.type);
-                    this._addMapObject(sugar);
-                    //TODO 加入甘草锁去除的动画
+                this._countUpAllMapObjectCount(object);
+            }else{
+                this._decreaseFrosting(object.column, object.row);
+                this._decreaseChocolate(object.column, object.row);
+                if(!(object instanceof Frosting) && !(object instanceof Chocolate)){
+                    if(object.objectCode == Constant.MAP_SUGAR){
+                        this._showSugarDeletedEffect(object);
+                        cc.pool.putInPool(object);
+                    }
+                    this.mapPanel.removeChild(object);
+                    this.map[object.column][object.row] = null;
+                    //只有特殊爆炸才能炸掉甘草锁糖果，然后换成普通糖果
+                    if(object instanceof SugarLock){
+                        var sugar = Sugar.create(object.column, object.row, object.type);
+                        this._addMapObject(sugar);
+                        //TODO 加入甘草锁去除的动画
+                    }
+                    this._countUpAllMapObjectCount(object);
                 }
             }
-            this._decreaseFrosting(object.column, object.row);
-            this._calculateScore(object);
+        }
+    },
+
+    _countUpAllMapObjectCount: function (object) {
+        if(object.block){
+            this.popBlockCount[object.objectCode] = (0|this.popBlockCount[object.objectCode]) + 1;
+        }else if(object instanceof Sugar){
+            this.sugarPopCount[object.type]++;
+            this.popSugarCount[object.type] = (0|this.popSugarCount[object.type]) + 1;
+            if(object.effect != Constant.EFFECT_NONE){
+                this.popSpecialSugarCount[object.effect] = (0|this.popSpecialSugarCount[object.effect]) + 1;
+            }
         }
     },
 
@@ -747,10 +901,15 @@ var GameLayer = cc.Layer.extend({
 
     _generateNewSugars: function () {
         var maxTime = 0;
+        this.moving = true;
         if(this.popBombSugarsCount >= 2 || this.popLineSugarsCount >= 2 || (this.popLineSugarsCount >= 1 && this.popBombSugarsCount >= 1)){
 
-            var sugar = Sugar.create(this.popColumn, this.popRow);
-            this._addMapObject(sugar);
+            var sugar = this.map[this.popColumn][this.popRow];
+            //如果在点击的位置已经生成了新的特殊糖
+            if(!sugar){
+                sugar = Sugar.create(this.popColumn, this.popRow, this._randomSugarType());
+                this._addMapObject(sugar);
+            }
 
             if(this.popBombSugarsCount >= 2){
                 sugar.setEffect(Constant.EFFECT_BIG_BOMB);
@@ -779,7 +938,7 @@ var GameLayer = cc.Layer.extend({
                 var sugar = this.map[i][j];
                 if(!sugar){
                     if(blocksCountAbove == 0){
-                        sugar = Sugar.create(i, Constant.MAP_SIZE+missCount);
+                        sugar = Sugar.create(i, Constant.MAP_SIZE+missCount, this._randomSugarType());
                         this._addMapObject(sugar);
                         missCount++;
                     }
@@ -824,7 +983,60 @@ var GameLayer = cc.Layer.extend({
     },
 
     _finishSugarFalls: function () {
-        this.moving = false;
+        this._chocolateGrow();
+        this.scheduleOnce((function(){
+            this.moving = false;
+        }).bind(this), 1);      //预留1秒给巧克力生长
+    },
+
+    /**
+     * 每一步后巧克力生长，随机选一个空位
+     * @private
+     */
+    _chocolateGrow: function () {
+        if(!this.chocolateDeleted){
+            var chocolateList = [];
+            if(this.chocolateMachine)
+                chocolateList.push(this.chocolateMachine);
+            for (var i = 0; i < Constant.MAP_SIZE; i++) {
+                for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                    if(this.map[i][j] && this.map[i][j] instanceof Chocolate){
+                        chocolateList.push(this.map[i][j]);
+                    }
+                }
+            }
+            if(chocolateList.length > 0){
+                var target = null;
+                var source = null;
+                for (var i = 0; i < chocolateList.length; i++) {
+                    var aroundSugarList = [];
+                    var column = chocolateList[i].column;
+                    var row = chocolateList[i].row;
+                    if(this._checkSugarExist(column-1,row)){
+                        aroundSugarList.push(this.map[column-1][row]);
+                    }
+                    if(this._checkSugarExist(column,row-1)){
+                        aroundSugarList.push(this.map[column][row-1]);
+                    }
+                    if(this._checkSugarExist(column+1,row)){
+                        aroundSugarList.push(this.map[column+1][row]);
+                    }
+                    if(this._checkSugarExist(column,row+1)){
+                        aroundSugarList.push(this.map[column][row+1]);
+                    }
+                    if(aroundSugarList.length > 0){
+                        target = aroundSugarList[parseInt(Math.random()*aroundSugarList.length)];
+                        source = chocolateList[i];
+                        break;
+                    }
+                }
+                if(target){
+                    source.grow(target.column, target.row);
+                    this.mapPanel.removeChild(target);
+                    this._addMapObject(new Chocolate(target.column, target.row));
+                }
+            }
+        }
     },
 
     _decreaseSugarBombsSteps: function () {
@@ -852,17 +1064,20 @@ var GameLayer = cc.Layer.extend({
         if(isFrosting(column,row)){
             frostingList.push(this.map[column][row]);
         }
-        if(isFrosting(column-1,row)){
-            frostingList.push(this.map[column-1][row]);
-        }
-        if(isFrosting(column,row-1)){
-            frostingList.push(this.map[column][row-1]);
-        }
-        if(isFrosting(column+1,row)){
-            frostingList.push(this.map[column+1][row]);
-        }
-        if(isFrosting(column,row+1)){
-            frostingList.push(this.map[column][row+1]);
+        //如果当前点是糖
+        if(this._checkSugarExist(column, row)){
+            if(isFrosting(column-1,row)){
+                frostingList.push(this.map[column-1][row]);
+            }
+            if(isFrosting(column,row-1)){
+                frostingList.push(this.map[column][row-1]);
+            }
+            if(isFrosting(column+1,row)){
+                frostingList.push(this.map[column+1][row]);
+            }
+            if(isFrosting(column,row+1)){
+                frostingList.push(this.map[column][row+1]);
+            }
         }
 
         for (var i = 0; i < frostingList.length; i++) {
@@ -873,9 +1088,12 @@ var GameLayer = cc.Layer.extend({
                 continue;
             }
             frosting.decreaseLevel();
+            this.popBlockCount[Constant.MAP_FROSTING] = (0|this.popBlockCount[Constant.MAP_FROSTING]) + 1;
             if(frosting.level == 0){
                 var sugar = this._generateMapObject(frosting.content, frosting.column, frosting.row);
-                this._removeMapObject(frosting);
+                this.mapPanel.removeChild(frosting);
+                this.map[frosting.column][frosting.row] = null;
+                //TODO 糖霜移除的效果
                 this._addMapObject(sugar);
             }else{
                 this.frostingDecreaseRecord[this.explodeRound].push(frosting);
@@ -883,34 +1101,56 @@ var GameLayer = cc.Layer.extend({
         }
     },
 
-    _calculateScore: function (sugar) {
-        Game.sugarPopCount[sugar.type]++;
-        switch (sugar.effect){
-            case Constant.EFFECT_NONE:
-                Game.score+=Config.levels[Game.level].sugarScore;
-                break;
-
-            case Constant.EFFECT_COLORFUL:
-                Game.score += 5;
-                break;
-
-            default:
-                Game.score += 3;
-                break;
+    /**
+     * 消除巧克力
+     * @param column 糖果消除的位置
+     * @param row
+     * @private
+     */
+    _decreaseChocolate: function (column, row) {
+        var isChocolate = (function(column, row){
+            return (column >= 0 && row >= 0 && column < Constant.MAP_SIZE && row < Constant.MAP_SIZE
+                && this.map[column][row] && this.map[column][row] instanceof Chocolate);
+        }).bind(this);
+        var chocolateList = [];
+        if(isChocolate(column,row)){
+            chocolateList.push(this.map[column][row]);
         }
+        //如果当前点是糖
+        if(this._checkSugarExist(column, row)){
+            if(isChocolate(column-1,row)){
+                chocolateList.push(this.map[column-1][row]);
+            }
+            if(isChocolate(column,row-1)){
+                chocolateList.push(this.map[column][row-1]);
+            }
+            if(isChocolate(column+1,row)){
+                chocolateList.push(this.map[column+1][row]);
+            }
+            if(isChocolate(column,row+1)){
+                chocolateList.push(this.map[column][row+1]);
+            }
+        }
+        for (var i = 0; i < chocolateList.length; i++) {
+            this.mapPanel.removeChild(chocolateList[i]);
+            this.map[chocolateList[i].column][chocolateList[i].row] = null;
+            this.popBlockCount[Constant.MAP_CHOCOLATE] = (0|this.popBlockCount[Constant.MAP_CHOCOLATE]) + 1;
+            //TODO 巧克力移除的效果
+        }
+        this.chocolateDeleted = this.chocolateDeleted || chocolateList.length > 0;
     },
 
     _checkLevelSucceedOrFail: function () {
-        var task = Config.levels[Game.level].task;
+        var task = Config.levels[this.level].task;
         var finish = false;
         if(task.score){
-            if(Game.score >= task.score){
+            if(this.score >= task.score){
                 finish = true;
             }
         }else if(task.count){
             finish = true;
             for (var i = 0; i < task.count.length; i++) {
-                if(Game.sugarPopCount[i] < task.count[i]){
+                if(this.sugarPopCount[i] < task.count[i]){
                     finish = false;
                     break;
                 }
@@ -919,7 +1159,7 @@ var GameLayer = cc.Layer.extend({
         if(finish){
             this.ui.showSuccess();
             this.scheduleOnce(function(){
-                Game.level++;
+                this.level++;
                 cc.director.runScene(new LevelListScene());
             }, 3);
         }else{
@@ -932,8 +1172,7 @@ var GameLayer = cc.Layer.extend({
                     }
                 }
             }
-            var limit = Config.levels[Game.level].limit;
-            if(sugarBombExploded || (limit.step && Game.steps > limit.step) || (!limit.step && limit.time && Game.timeElapsed > limit.time)){
+            if(sugarBombExploded || (this.limitStep && this.steps > this.limitStep) || (!this.limitStep && this.limitTime && this.timeElapsed > this.limitTime)){
                 this.ui.showFail();
                 this.scheduleOnce(function(){
                     cc.director.runScene(new LevelListScene());
@@ -946,7 +1185,7 @@ var GameLayer = cc.Layer.extend({
      * 找到当前画面，随机一个颜色
      * @private
      */
-    _findRandomSugarType: function () {
+    _findExistSugarRandomType: function () {
         var colorExist = [];
         for (var i = 0; i < Constant.MAP_SIZE; i++) {
             for (var j = 0; j < Constant.MAP_SIZE; j++) {
@@ -957,6 +1196,68 @@ var GameLayer = cc.Layer.extend({
             }
         }
         return colorExist[parseInt(Math.random()*colorExist.length)];
+    },
+
+    _useProp: function (column, row) {
+        if(this.map[column][row] instanceof BlankHole || this.map[column][row] instanceof ChocolateMachine || this.moving){
+            return;
+        }
+        this._onePopActionBegin();
+        switch (this.usingPropId){
+            case Constant.PROP_HAMMER:
+                this._onePopActionBegin();
+                for (var j = column-Constant.PROP_HAMMER_RANGE; j <= column+Constant.PROP_HAMMER_RANGE; j++) {
+                    for (var k = row-Constant.PROP_HAMMER_RANGE; k <= row+Constant.PROP_HAMMER_RANGE; k++) {
+                        if(j >= 0 && j < Constant.MAP_SIZE && k >= 0 && k < Constant.MAP_SIZE){
+                            this._removeMapObject(this.map[j][k], true);
+                        }
+                    }
+                }
+                break;
+
+            case Constant.PROP_ROCKET:
+                var object = this.map[column][row];
+                var objectCode = object.objectCode;
+                var sugarType = 0;
+                if(object instanceof Sugar){
+                    sugarType = object.type;
+                }
+                for (var i = 0; i < Constant.MAP_SIZE; i++) {
+                    for (var j = 0; j < Constant.MAP_SIZE; j++) {
+                        var o = this.map[i][j];
+                        if(o){
+                            //如果点的是甘草锁糖果，这里消除就复杂一些。要消除同色糖果和甘草锁糖果
+                            if(sugarType){
+                                if((o instanceof Sugar && o.type == sugarType) || (object instanceof SugarLock && o instanceof SugarLock)){
+                                    this._removeMapObject(o, true);
+                                }
+                            }else if(o.objectCode == objectCode){
+                                this._removeMapObject(o, true);
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+        this.score += calculateScore(this.popSugarCount, this.popSpecialSugarCount, this.popBlockCount);
+        this._generateNewSugars();
+        this.ui.finishUsingProp();
+        this.usingPropId = 0;
+    },
+
+    _showSugarDeletedEffect: function (sugar) {
+        var effect = new cc.Sprite();
+        var animationFrames = [];
+        for (var i = 1; i < 5; i++) {
+            animationFrames.push(cc.spriteFrameCache.getSpriteFrame("pop_" + sugar.type + "/" + i + ".png"));
+        }
+        var animation = new cc.Animation(animationFrames, 0.08, 1);
+        effect.runAction(cc.sequence(cc.animate(animation), cc.callFunc(function(){
+            this.effectPanel.removeChild(effect);
+        }.bind(this))));
+        this.effectPanel.addChild(effect, 0);
+        effect.x = this.mapPanel.x + sugar.x;
+        effect.y = this.mapPanel.y + sugar.y;
     },
 
     traceSugars: function () {
@@ -972,9 +1273,9 @@ var GameLayer = cc.Layer.extend({
 });
 
 var GameScene = cc.Scene.extend({
-    onEnter:function () {
+    ctor: function (level) {
         this._super();
-        var layer = new GameLayer();
+        var layer = new GameLayer(level);
         this.addChild(layer);
     }
 });
