@@ -55,11 +55,19 @@ var Sugar = MapObject.extend({
             if(this.effect == Constant.EFFECT_COLORFUL){
                 //TODO 彩糖的选中态
             }else{
-                this.image.setSpriteFrame("" + this.type + "_1.png");
+                if(this.effect == Constant.EFFECT_HORIZONTAL || this.effect == Constant.EFFECT_VERTICAL){
+                    this.image.setSpriteFrame("" + this.type + "_3.png");
+                } else {
+                    this.image.setSpriteFrame("" + this.type + "_1.png");
+                }
             }
             this.status = Constant.STATUS_CHOSEN;
         } else {
-            this.setSpriteFrame("" + this.type + ".png");
+            if(this.effect == Constant.EFFECT_HORIZONTAL || this.effect == Constant.EFFECT_VERTICAL){
+                this.image.setSpriteFrame("" + this.type + "_2.png");
+            } else if (this.effect != Constant.EFFECT_COLORFUL){
+                this.image.setSpriteFrame("" + this.type + ".png");
+            }
             this.status = Constant.STATUS_NORMAL;
         }
     },
@@ -67,39 +75,31 @@ var Sugar = MapObject.extend({
     setEffect: function (effect) {
         this.effect = effect;
         this.markChosen(false);
-        if(effect == Constant.EFFECT_COLORFUL){
-            this.type = 0;
-            this.image.setSpriteFrame("colorful.png");
-        } else {
-            this._removeEffectLayer();
-            if(effect != Constant.EFFECT_NONE){
+        this._removeEffectLayer();
+        if(effect != Constant.EFFECT_NONE){
+            var frameCountConfig = [0, 4, 4, 3, 4, 0, 8];
 
-                this.effectLayer = new cc.Sprite("#effect_" + 6 + "/1.png");
-                var animationFrames = [];
-                for (var i = 1; i <= 3; i++) {
-                    animationFrames.push(cc.spriteFrameCache.getSpriteFrame("effect_" + 6 + "/" + i + ".png"));
-                }
-                var animation = new cc.Animation(animationFrames, 0.1);
-                this.effectLayer.runAction(cc.animate(animation).repeatForever());
+            this.effectLayer = new cc.Sprite("#effect_" + effect + "/1.png");
+            var animationFrames = [];
+            for (var i = 1; i <= frameCountConfig[effect]; i++) {
+                animationFrames.push(cc.spriteFrameCache.getSpriteFrame("effect_" + effect + "/" + i + ".png"));
+            }
+            var animation = new cc.Animation(animationFrames, 0.1);
+            this.effectLayer.runAction(cc.animate(animation).repeatForever());
 
-//                if(effect == Constant.EFFECT_HORIZONTAL){
-//                    this.effectLayer = new cc.Sprite("#horizontal.png");
-//                } else if(effect == Constant.EFFECT_VERTICAL){
-//                    this.effectLayer = new cc.Sprite("#vertical.png");
-//                } else if(effect == Constant.EFFECT_BOMB){
-//                    this.effectLayer = new cc.Sprite("#bomb.png");
-//                } else if(effect == Constant.EFFECT_BIG_BOMB){
-//                    this.effectLayer = new cc.Sprite("#big_bomb.png");
-//                } else if(effect == Constant.EFFECT_CROSS){
-//
-//                } else if(effect == Constant.EFFECT_HORIZONTAL_BOMB){
-//                    this.effectLayer = new cc.Sprite("#horizontal_bomb.png");
-//                } else if(effect == Constant.EFFECT_VERTICAL_BOMB){
-//                    this.effectLayer = new cc.Sprite("#vertical_bomb.png");
-//                }
-                this.effectLayer.x = Constant.SUGAR_WIDTH/2;
-                this.effectLayer.y = Constant.SUGAR_WIDTH/2;
+            this.effectLayer.x = Constant.SUGAR_WIDTH/2;
+            this.effectLayer.y = Constant.SUGAR_WIDTH/2;
+
+            if(effect == Constant.EFFECT_HORIZONTAL || effect == Constant.EFFECT_VERTICAL){
+                this.image.setSpriteFrame("" + this.type + "_2.png");
+            } else if(effect == Constant.EFFECT_COLORFUL){
+                this.image.setSpriteFrame("colorful.png");
+            }
+
+            if(effect == Constant.EFFECT_CROSS || effect == Constant.EFFECT_COLORFUL || effect == Constant.EFFECT_BOMB){
                 this.addChild(this.effectLayer, 1);
+            } else {
+                this.addChild(this.effectLayer, 3);
             }
         }
     }
