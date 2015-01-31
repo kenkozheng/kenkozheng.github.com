@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="shortcut icon" href="images/favicon.ico"/>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/slider.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-migrate-1.1.1.js"></script>
+    <script src="js/superfish.js"></script>
+    <script src="js/sForm.js"></script>
+    <script src="js/jquery.jqtransform.js"></script>
+    <script src="js/jquery.equalheights.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="js/tms-0.4.1.js"></script>
+    <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="js/jquery.ui.totop.js"></script>
+    <script>
+        $(window).load(function () {
+            $('.slider')._TMS({
+                show: 0,
+                pauseOnHover: false,
+                prevBu: '.prev',
+                nextBu: '.next',
+                playBu: false,
+                duration: 800,
+                preset: 'random',
+                pagination: false,//'.pagination',true,'<ul></ul>'
+                pagNums: false,
+                slideshow: 8000,
+                numStatus: false,
+                banners: true,
+                waitBannerAnimation: false,
+                progressBar: false
+            });
+            $("#tabs").tabs();
+
+            $().UItoTop({ easingType: 'easeOutQuart' });
+        });
+
+
+    </script>
+    <!--[if lt IE 8]>
+    <div style=' clear: both; text-align:center; position: relative;'>
+        <a href="http://rj.baidu.com/soft/detail/14744.html?ald">
+            你的浏览器太老啦！换个新浏览器，效果就好太多了！试试Chrome吧！
+        </a>
+    </div>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <link rel="stylesheet" media="screen" href="css/ie.css">
+
+    <![endif]-->
+</head>
+<body class="page1">
+<!--==============================header=================================-->
+<header>
+    <div class="container_12">
+        <div class="grid_12">
+            <h1><a href="index.html"><img src="images/logo.png" alt="胖哥包车游"></a></h1>
+
+
+            <div class="clear"></div>
+        </div>
+        <div class="menu_block">
+            <nav class="">
+                <ul class="sf-menu">
+                    <li class="current"><a href="index.html">环游呼伦贝尔</a></li>
+                    <li><a href="index.html#about">关于胖哥</a></li>
+                    <li><a href="gallery.html">风景照</a></li>
+                    <li><a href="blog.html">客人游记</a></li>
+                    <li><a href="cars.html">车型选择</a></li>
+                    <li><a href="index.html#about">联系胖哥</a></li>
+                </ul>
+            </nav>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</header>
+
+<div class="main">
+    <div class="container_12">
+        <div class="grid_12">
+            <div class="slider-relative">
+                <div class="slider-block">
+                    <div class="slider">
+                        <a href="#" class="prev"></a><a href="#" class="next"></a>
+                        <ul class="items">
+                            <li><img src="images/slide.jpg" alt="">
+
+                                <div class="banner">
+                                    <div>呼伦贝尔</div>
+                                    <br>
+                                    <span>胖哥带你欣赏四季的色彩</span>
+                                </div>
+                            </li>
+                            <li><img src="images/slide1.jpg" alt=""></li>
+                            <li><img src="images/slide2.jpg" alt=""></li>
+                            <li><img src="images/slide3.jpg" alt=""></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--=======content================================-->
+    <div class="content">
+        <div class="container_12">
+            <div class="grid_8 gap"></div>
+            <div class="grid_8">
+                <div id="tabs">
+                    <ul id="tour">
+                        <li><a href="#tabs-1">10天大环线</a></li>
+                        <li><a href="#tabs-2">6天北部环线</a></li>
+                        <li><a href="#tabs-3">4天南部环线</a></li>
+                    </ul>
+                    <div class="clear"></div>
+                    <div class="tab_cont" id="tabs-1">
+                        <img src="images/page1_img4.jpg" alt="">
+
+                        <div class="extra_wrapper">
+                            <div class="text1">北部环线</div>
+                            <p class="style1">啊巴尔虎旗大草原、成吉思汗大汗、恩和、临江、莫尔道嘎、黑山头</p>
+
+                            各种好处。。。
+
+                            <div class="clear "></div>
+
+                        </div>
+                        <div class="clear cl1"></div>
+                        <img src="images/page1_img5.jpg" alt="">
+
+                        <div class="extra_wrapper">
+                            <div class="text1 tx1">南部环线</div>
+                            阿尔山、呼伦湖、海拉尔阿尔山、呼伦湖、海拉尔阿尔山、呼伦湖、海拉尔阿尔山、呼伦湖、海拉尔阿尔山、呼伦湖、海拉尔阿尔山、呼伦湖、海拉尔
+                            <div class="clear"></div>
+
+                            <div class="clear "></div>
+
+                        </div>
+                    </div>
+                    <div class="tab_cont" id="tabs-2">
+                    </div>
+                    <div class="tab_cont" id="tabs-3">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid_4" id="about">
+                <div class="newsletter_title">关于胖哥</div>
+                <div class="n_container">
+                    <img class="about_img" src="images/pangge.jpg" alt="胖哥壮硕的身影"/>
+                    <ul class="list">
+                        <li>胖哥是一个土生土长的呼伦贝尔蒙古人，真名是阿拉木斯，他壮硕的身材犹如黑老大，但却是一个非常幽默的人。跟着胖哥，大家可以领略到不一样的呼伦贝尔，真正深入大自然。</li>
+                        <li>手机：</li>
+                        <li>微信：</li>
+                        <li>QQ：</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <div class="grid_12">
+                <h3>推荐景点</h3>
+            </div>
+            <div class="boxes">
+                <div class="grid_4">
+                    <figure>
+                        <div><img src="images/page1_img1.jpg" alt=""></div>
+                        <figcaption>
+                            <h3>根河湿地</h3>
+                            根河湿地旅游区位于呼伦贝尔额尔古纳市拉布大林镇的西北郊，距市区3公里，面积约为3平方公里。这里地形平缓开阔，额尔古纳河的支流根河从这里蜿蜒流过，形成了壮观秀丽的河流湿地景观。
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="grid_4">
+                    <figure>
+                        <div><img src="images/page1_img2.jpg" alt=""></div>
+                        <figcaption>
+                            <h3>莫尔道嘎</h3>
+                            Psum dolor sit ametylo gerto consectetur ertori hykill holit adipiscing lity. Donecto rtopil
+                            osueremo kollit asec emmodem geteq tiloli. Aliquam dapibus neclol nami wertoli elittro eget
+                            vulpoli no
+                            utaterbil congue turpis in su.
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="grid_4">
+                    <figure>
+                        <div><img src="images/page1_img3.jpg" alt=""></div>
+                        <figcaption>
+                            <h3>临江屯</h3>
+                            Lorem ipsum dolor site geril amet, consectetur cing eliti. Suspendisse nulla leo mew
+                            dignissim eu velite a rew qw vehicula lacinia arcufasec ro. Aenean lacinia ucibusy fase
+                            tortor ut feugiat. Rabi tur oliti aliquam bibendum olor quis malesuadivamu.
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="bottom_block">
+        <div class="container_12">
+            <div class="grid_2">
+                <h4>联系胖哥</h4>
+            </div>
+            <div class="grid_2">
+                <h4>手机：</h4>
+            </div>
+            <div class="grid_2">
+                <h4>QQ：</h4>
+            </div>
+            <div class="grid_2">
+                <h4>微信：</h4>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!--==============================footer=================================-->
+
+</div>
+<footer>
+    <div class="container_12">
+        <div class="grid_12">
+            <div class="copy">
+                &copy; Copyright &copy; 2015.Company name All rights reserved.
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+</footer>
+
+<div style="display:none"></div>
+</body>
+</html>
