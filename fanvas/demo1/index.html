@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Fanvas Demo</title>
+
+    <!-- Note: All core fanvas classes are listed here: -->
+
+    <script type="text/javascript" src="fanvas2-min.js"></script>
+    <script type="text/javascript" src="swfData.js"></script>
+
+    <script>
+
+        function init() {
+			
+			setTimeout(function(){
+				document.getElementById("testCanvas").width = window.innerWidth;
+				document.getElementById("testCanvas").height = window.innerHeight;
+				fanvas.play("testCanvas", swfData, {
+					cache: false, autoPlay: true,
+					onFrame: function (index) {
+	//                    console.log("onFrame", index);
+	//                    if(index == 3){
+	//                        fanvas.pause("testCanvas");
+	//                        setTimeout(function(){
+	//                            fanvas.resume("testCanvas");
+	//                            fanvas.replay("testCanvas");
+	//                        }, 2000);
+	//                    }
+					},
+					imagePath: "./img/"
+				});
+			}, 100);
+		
+        }
+
+    </script>
+</head>
+
+<body onload="init();">
+<img src="bg.jpg" style="position:absolute;left:0;top:0;height:100%;width:100%;border:0"/>
+<div style="position:absolute;left:0;top:0;" class="canvasHolder">
+    <canvas id="testCanvas" style=""></canvas>
+</div>
+</body>
+</html>
