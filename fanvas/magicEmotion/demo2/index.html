@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!--<meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1" />-->
+    <title>Fanvas Demo</title>
+
+    <!-- Note: All core fanvas classes are listed here: -->
+
+    <script type="text/javascript" src="fanvas3-min.js"></script>
+    <script type="text/javascript" src="swfData.js"></script>
+
+    <script>
+
+        function init() {
+			
+			setTimeout(function(){
+                var canvas = document.getElementById("testCanvas");
+//                alert(window.innerWidth + ' ' + window.innerHeight);
+//                swfData.frameRate = 12;
+                canvas.style.width = window.innerWidth + 'px';     //css控制最终实际显示的尺寸
+                canvas.style.height = window.innerHeight + 'px';
+				fanvas.play("testCanvas", swfData, {
+					cache: 2, autoPlay: true,
+					onFrame: function (index) {
+	//                    console.log("onFrame", index);
+	//                    if(index == 3){
+	//                        fanvas.pause("testCanvas");
+	//                        setTimeout(function(){
+	//                            fanvas.resume("testCanvas");
+	//                            fanvas.replay("testCanvas");
+	//                        }, 2000);
+	//                    }
+					},
+                    //showFPS: 1,
+                    scale: 1,
+                    //clearAll: 1,
+                    //showDirtyRect: 1,
+					imagePath: "./img/"
+				});
+			}, 100);
+		
+        }
+
+    </script>
+</head>
+
+<body onload="init();">
+<div style="position:absolute;left:0;top:0;" class="canvasHolder">
+    <canvas id="testCanvas" width="1000" height="800" ></canvas>
+</div>
+</body>
+</html>
