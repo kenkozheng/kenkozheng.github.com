@@ -576,9 +576,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
    General styles
    ========================================================================== */
 
-html, body {
-    height: 100%;
-}
 
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei", "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif;
@@ -827,6 +824,29 @@ a:before, a:after {
     border: 1px solid #fff;
 }
 
+@media screen and (max-width: 1050px), screen and (max-device-width: 1050px) {
+    body .header {
+        background-attachment: scroll;
+    }
+}
+
+/*ipad portrait*/
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+    .header {
+        background-attachment: scroll;
+    }
+}
+
+@media screen and (max-width: 769px) {
+    #headerwrap h1 {
+        font-size: 40px;
+    }
+
+    #headerwrap p {
+        font-size: 20px;
+    }
+}
+
 #about {
     background: #fff;
     padding-top: 80px;
@@ -845,7 +865,7 @@ a:before, a:after {
 
 #video, #activity {
     background: url(../img/bg.jpg) no-repeat center center fixed;
-    padding: 80px 0 60px 0;
+    padding: 60px 0 60px 0;
     text-align: center;
     background-size: cover;
 }
@@ -1011,29 +1031,71 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     transition: transform 0.4s;
 }
 
-/* ==========================================================================
-   MEDIA QUERIES
-   ========================================================================== */
 
-@media screen and (max-width: 1050px), screen and (max-device-width: 1050px) {
-    body .header {
-        background-attachment: scroll;
-    }
+/*=============================
+产品详情页
+=============================*/
+
+#product{
+    padding-top: 125px;
 }
 
-/*ipad portrait*/
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
-    .header {
-        background-attachment: scroll;
-    }
+.product-head{
+    margin: 75px 0 0 0;
+    background-color: #fff;
+    z-index: 999;
 }
 
-@media screen and (max-width: 769px) {
-    #headerwrap h1 {
-        font-size: 40px;
+.product-head .btn{
+    margin-top: 10px;
+}
+
+.product-head label{
+    margin: 15px 10px 10px 0;
+    vertical-align: sub;
+    font-size: 1.1em;
+    font-weight: 100;
+}
+
+.product-desc {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background:  no-repeat center bottom;
+    background-size: 100% auto;
+}
+
+.product-desc label{
+    margin: 30px 0 0 0;
+    font-size: 2.5em;
+}
+
+.product-desc p{
+    margin: 0;
+    font-size: 1em;
+}
+
+/*对付手机屏幕*/
+@media screen and (max-width: 600px) {
+    .product-desc label{
+        margin: 5px 0 0 0;
+        font-size: 1.2em;
     }
 
-    #headerwrap p {
-        font-size: 20px;
+    .product-desc p{
+        font-size: 0.8em;
+    }
+
+    .navbar-default {
+         padding: 0;
+    }
+
+    .product-head{
+        margin: 48px 0 0 0;
+    }
+
+    #product{
+        padding-top: 99px;
     }
 }
