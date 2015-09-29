@@ -1088,7 +1088,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     }
 
     .navbar-default {
-         padding: 0;
+        padding: 0;
     }
 
     .product-head{
@@ -1097,5 +1097,20 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 
     #product{
         padding-top: 99px;
+    }
+}
+
+/*对付超大屏幕*/
+@media screen and (min-width: 1440px) {
+    .product-desc label{
+        margin: 50px 0 0 0;
+        font-size: 4.5em;
+        font-weight: 100;
+    }
+
+    .product-desc p{
+        margin: 0;
+        line-height: 1.3em;
+        font-size: 1.3em;
     }
 }
