@@ -232,6 +232,7 @@ blockquote cite:before {
 a {
     color: #4abcc5;
     word-wrap: break-word;
+    text-decoration: none;
     -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
     -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
     -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
@@ -241,7 +242,6 @@ a {
 
 a:hover, a:focus {
     color: #c0392b;
-    text-decoration: none;
     outline: 0;
 }
 
@@ -401,6 +401,10 @@ a:before, a:after {
 #portfolio {
     background-color: #fff;
     padding: 60px 0;
+}
+
+#portfolio a:hover{
+    text-decoration: none;
 }
 
 #portfolio .btn-default {
@@ -563,7 +567,8 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     margin: 0;
     padding: 0;
     background:  no-repeat center bottom;
-    background-size: 100% auto;
+    background-size: cover;
+    -webkit-background-size: cover;
 }
 
 .product-desc label{

@@ -4,6 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--用于兼容IE和360什么的，尽量让浏览器用webkit内核-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
     <meta name="description" content="">
     <title>无人机1——ZEGO翊高</title>
 
@@ -46,13 +49,15 @@
 </div>
 
 <style>
-    @media only screen and (min-device-width: 768px){
-        .bg1{
-            background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg)
-        }
-        .bg2{
-            background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg)
-        }
+
+    /*默认用大图，兼容IE8，用filter*/
+    .bg1{
+        background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg);
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg', sizingMethod='scale');
+    }
+    .bg2{
+        background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg);
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg', sizingMethod='scale');
     }
 
     @media screen and (max-width: 769px) {
