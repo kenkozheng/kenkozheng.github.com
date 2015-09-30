@@ -49,13 +49,14 @@
 </div>
 
 <style>
-    @media only screen and (min-device-width: 768px){
-        .bg1{
-            background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg)
-        }
-        .bg2{
-            background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg)
-        }
+    /*默认用大图，兼容IE8，用filter*/
+    .bg1{
+        background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg);
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg', sizingMethod='scale');
+    }
+    .bg2{
+        background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg);
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg', sizingMethod='scale');
     }
 
     @media screen and (max-width: 769px) {
