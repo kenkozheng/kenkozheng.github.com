@@ -6,16 +6,9 @@
     <meta name="description" content="">
     <title>ZEGO翊高</title>
 
-    <!-- Bootstrap core CSS -->
     <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
     <link href="css/main.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <!--360提供的font cdn服务-->
-    <!--<link href='http://fonts.useso.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet'-->
-    <!--type='text/css'>-->
-    <!--<link href='http://fonts.useso.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>-->
     <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -29,13 +22,12 @@
 
 <body>
 <div id="navbar-main">
-    <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-                <a class="navbar-brand" href="index.html#headerwrap"><i class="fa fa-location-arrow"></i> ZEGO翊高</a></div>
+                <a class="navbar-brand" href="index.html"><i class="fa fa-location-arrow"></i> ZEGO翊高</a></div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="index.html#headerwrap" class="smoothScroll">首页</a></li>
@@ -46,35 +38,29 @@
                     <li><a href="index.html#about" class="smoothScroll"> 关于</a></li>
                 </ul>
             </div>
-            <!--/.nav-collapse -->
         </div>
     </div>
 </div>
 
-<!-- ==== HEADERWRAP ==== -->
 <div id="headerwrap" name="home">
     <header class="clearfix">
         <h1>设计、研发、直销</h1>
 
         <p>傻瓜式的操作带来专业级的航模和航拍享受</p>
-        <a href="#video" class="smoothScroll btn btn-lg">看看ZEGO视频简介</a>
+        <a href="#video" id="videoBtn" class="smoothScroll btn btn-lg">看看ZEGO视频简介</a>
     </header>
 </div>
-<!-- /headerwrap -->
 
-<!-- ==== PORTFOLIO ==== -->
 <div id="portfolio" name="portfolio">
     <div class="container">
         <div class="row">
             <h2 class="centered">Zego明星单品</h2>
             <hr>
         </div>
-        <!-- /row -->
         <div class="container">
             <div class="row">
                 <div class="col-md-2"></div>
 
-                <!-- PORTFOLIO IMAGE 1 -->
                 <div class="col-md-4 ">
                     <div class="grid mask">
                         <a href="product.html">
@@ -84,15 +70,11 @@
                                     <h5>无人机1</h5>
                                     <p>创新六螺旋，稳定飞行，高清720p</p>
                                 </figcaption>
-                                <!-- /figcaption -->
                             </figure>
-                            <!-- /figure -->
                         </a>
                     </div>
-                    <!-- /grid-mask -->
                 </div>
 
-                <!-- PORTFOLIO IMAGE 2 -->
                 <div class="col-md-4">
                     <div class="grid mask">
                         <a href="product2.html">
@@ -102,36 +84,25 @@
                                     <p>超轻超小，超长半小时飞行</p>
                                 </figcaption>
                             </figure>
-                            <!-- /figure -->
                         </a>
                     </div>
-                    <!-- /grid-mask -->
                 </div>
             </div>
-            <!-- /row -->
         </div>
-        <!-- /row -->
     </div>
 </div>
-<!-- /container -->
 
 
-<!-- ==== video ==== -->
 <div id="video" name="video">
     <div class="container">
         <div class="row">
             <h2 class="centered">视频简介</h2>
             <hr>
-            <p>
-
-            </p>
+            <iframe src=""></iframe>
         </div>
-        <!-- row -->
     </div>
 </div>
-<!-- container -->
 
-<!-- ==== ABOUT ==== -->
 <div id="about" name="about">
     <div class="container">
         <div class="row white">
@@ -150,25 +121,24 @@
                 <p>50-80字 选择ZEGO的理由，选择ZEGO的理由，选择ZEGO的理由，选择ZEGO的理由，选择ZEGO的理由，选择ZEGO的理由，选择ZEGO的理由</p>
             </div>
         </div>
-        <!-- row -->
     </div>
 </div>
-<!-- container -->
 
-<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/main.js?__inline=true"></script>
 
 
+<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <div id="footerwrap">
     <div class="container">
         <div class="row">
-            <div class="col-md-8"><span class="copyright">Copyright &copy; 2015 Zego. 备案号  </span></div>
+            <div class="col-md-8">
+                <span class="copyright">Copyright &copy; 2015 Zego. 备案号  </span>
+                <span id='cnzz_stat_icon_1256462760'></span><script src='http://s4.cnzz.com/z_stat.php?id=1256462760&show=pic1' type='text/javascript'></script>
+            </div>
             <div class="col-md-4">
-                <ul class="list-inline social-buttons">
-                </ul>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>

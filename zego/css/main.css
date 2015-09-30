@@ -592,7 +592,7 @@ body {
 
 .row {
     margin-right: 0px;
-    margin-left: -15px;
+    margin-left: 0px;
 }
 
 .modal-header {
@@ -896,6 +896,20 @@ a:before, a:after {
 
 #video H2 {
     color: #fff;
+}
+
+#video iframe{
+    border: none;
+    background: none;
+    min-height: 500px;
+    width: 100%;
+}
+
+/*对付手机屏幕*/
+@media screen and (max-width: 600px) {
+    #video iframe{
+        min-height: 250px;
+    }
 }
 
 #portfolio {
