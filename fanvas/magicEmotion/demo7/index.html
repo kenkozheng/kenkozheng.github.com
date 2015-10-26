@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+    <title>Fanvas Demo</title>
+<style>
+    canvas{
+        border: 1px solid red;
+    }
+</style>
+    <script>
+
+		
+        function getQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+
+        function init() {
+            //setTimeout(function () {
+                var canvas = document.getElementById("canvas");
+                var ctx = canvas.getContext('2d');
+                if(!ctx){
+                    document.getElementById('console').innerHTML += ' null';
+                }
+                ctx.fillStyle = 'yellow';
+                ctx.fillRect(100, 100, 200, 200);
+            //}, 2000);
+        }
+
+    </script>
+</head>
+
+<body>
+<div style="position:absolute;left:0;top:0;" id="canvasHolder">
+    <canvas id="canvas" width="500" height="500"></canvas>
+</div>
+<div style="position:absolute;left:0;top:0;" id="console">
+</div>
+<script>
+    document.getElementById('console').innerHTML += Date.now() + ' ' + screen.width + ' ' + screen.height + ' ' + devicePixelRatio;
+    window.onerror = function(e){
+        document.getElementById('console').innerHTML += e;
+    }
+	window.onload = init();
+</script>
+</body>
+</html>
