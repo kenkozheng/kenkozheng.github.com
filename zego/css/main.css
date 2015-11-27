@@ -15,13 +15,13 @@ body {
 
 ::-moz-selection {
     background: #f2c2c9;
-    color: #a4003a;
+    color: #160ca4;
     text-shadow: none;
 }
 
 ::selection {
-    background: #16a085;
-    color: #a4003a;
+    background: #007BC1;
+    color: #160ca4;
     text-shadow: none;
 }
 
@@ -82,7 +82,7 @@ body {
 }
 
 .modal-header {
-    background: #34b1c4;
+    background: #74C3EE;
 }
 
 .modal-header h4 {
@@ -92,19 +92,19 @@ body {
 }
 
 .modal-footer {
-    background: #34b1c4;
+    background: #74C3EE;
 }
 
 .navbar-default .navbar-nav > li > a {
     color: #555;
+    font-weight: 600;
 }
 
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: #38b5c9;
+    color: #74C3EE;
     background-color: #fff;
-
 }
 
 .navbar-default {
@@ -118,23 +118,41 @@ body {
     font-weight: 700;
     font-size: 26px;
     color: #666;
+    padding: 5px 15px;
+}
+
+.navbar-header{
+    width: 350px;
 }
 
 .navbar-brand .fa {
-    color: #38b5c9;
+    color: #007BC1;
+}
+
+.navbar-lang{
+    font-size: 13px;
+    margin-top: 18px;
+}
+
+.navbar-lang a{
+    background: 5px no-repeat;
+    padding-left: 32px;
+}
+
+.language-en a{
+    background-image: url(../img/en.jpg);
+}
+
+.language-cn a{
+    background-image: url(../img/cn.jpg);
 }
 
 .navbar-toggle {
-    border-color: transparent;
     border: 0px solid transparent;
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-    color: #38b5c9;
-}
-
-a img {
-    background: white;
+    color: #74C3EE;
 }
 
 .odd a img {
@@ -206,7 +224,7 @@ blockquote {
     position: relative;
     margin: 0 0 40px -30px;
     padding-left: 30px;
-    border-left: 5px solid #3498db;
+    border-left: 5px solid #007BC1;
 }
 
 blockquote cite {
@@ -230,7 +248,7 @@ blockquote cite:before {
 
 /* Links */
 a {
-    color: #4abcc5;
+    color: #007BC1;
     word-wrap: break-word;
     text-decoration: none;
     -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
@@ -241,7 +259,7 @@ a {
 }
 
 a:hover, a:focus {
-    color: #c0392b;
+    color: #160ca4;
     outline: 0;
 }
 
@@ -343,13 +361,18 @@ a:before, a:after {
 
 #about p{
     padding: 5px 0 15px 0;
+    text-align: left;
+}
+
+#about h3{
+    text-align: left;
 }
 
 #about img {
     margin-top: 0;
 }
 
-#video, #activity {
+#video, #activity, #about {
     background: url(../img/bg.jpg) no-repeat center center fixed;
     padding: 60px 0 60px 0;
     text-align: center;
@@ -361,10 +384,10 @@ a:before, a:after {
     height: 3px;
     border: 0;
     padding: 0;
-    background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), #71c9d6, rgba(255, 255, 255, 0));
-    background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0), #71c9d6, rgba(255, 255, 255, 0));
-    background-image: -ms-linear-gradient(left, rgba(255, 255, 255, 0), #71c9d6, rgba(255, 255, 255, 0));
-    background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0), #71c9d6, rgba(255, 255, 255, 0));
+    background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), #74C3EE, rgba(255, 255, 255, 0));
+    background-image: -moz-linear-gradient(left, rgba(255, 255, 255, 0), #74C3EE, rgba(255, 255, 255, 0));
+    background-image: -ms-linear-gradient(left, rgba(255, 255, 255, 0), #74C3EE, rgba(255, 255, 255, 0));
+    background-image: -o-linear-gradient(left, rgba(255, 255, 255, 0), #74C3EE, rgba(255, 255, 255, 0));
     width: 50%;
     left: 25%;
     position: relative;
@@ -449,7 +472,7 @@ a:before, a:after {
 }
 
 #footerwrap span.copyright a:hover {
-    color: #3ab7cb;
+    color: #74C3EE;
     text-decoration: none;
 }
 
@@ -468,7 +491,7 @@ ul.social-buttons li a {
 }
 
 ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li a:active {
-    color: #3ab7cb;
+    color: #74C3EE;
 }
 
 /* ==========================================================================
@@ -491,6 +514,10 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     color: #fff;
 }
 
+.black h3{
+    color: #fff;
+}
+
 /* ==========================================================================
    Image Mask
    ========================================================================== */
@@ -498,14 +525,18 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 .grid figure {
     margin: 0;
     position: relative;
+    border: 1px solid #fff;
+}
+
+.grid figure:hover{
     border: 1px solid #ddd;
+    background-color: #eeeeee;
 }
 
 .grid figure img {
     width: 100%;
     display: block;
     position: relative;
-
 }
 
 .grid figcaption h5 {
@@ -593,7 +624,11 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     }
 
     .navbar-default {
-        padding: 0;
+        padding: 5px 0;
+    }
+
+    .navbar-brand img{
+        margin-top: -5px;
     }
 
     .product-head{
@@ -603,6 +638,13 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     #product{
         padding-top: 99px;
     }
+}
+
+.product-desc .hidden-xs{
+    max-width:600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 6px;
 }
 
 /*对付超大屏幕*/
@@ -616,6 +658,6 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     .product-desc p{
         margin: 0;
         line-height: 1.3em;
-        font-size: 1.3em;
+        font-size: 1em;
     }
 }

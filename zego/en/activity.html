@@ -8,10 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
     <meta name="description" content="">
-    <title>mini无人机——ZEGO翊高</title>
+    <title>活动预告——ZEGO翊高</title>
 
     <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
     <link href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 
@@ -24,6 +24,16 @@
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script>
+        function changeLanguage(){
+            var url = location.href;
+            if(url.indexOf('/cn/')){
+                location.href = url.replace('/cn/', '/en/');
+            } else {
+                location.href = url.replace('/en/', '/cn/');
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -33,7 +43,9 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-                <a class="navbar-brand" href="index.html"><i class="fa fa-location-arrow"></i> ZEGO翊高</a></div>
+                <a class="navbar-brand" href="index.html"><i class="fa fa-location-arrow"></i> ZEGO翊高</a>
+                <a class="navbar-lang language-en" href="javascript:changeLanguage();">English Version</a>
+            </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="index.html#headerwrap" class="smoothScroll">首页</a></li>
@@ -47,50 +59,20 @@
         </div>
     </div>
 </div>
-
-<style>
-    /*默认用大图，兼容IE8，用filter*/
-    .bg1{
-        background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg);
-        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg', sizingMethod='scale');
-    }
-    .bg2{
-        background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg);
-        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg', sizingMethod='scale');
-    }
-
-    @media screen and (max-width: 769px) {
-        .bg1{
-            background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-bn-bg.jpg)
-        }
-        .bg2{
-            background-image: url(http://c1.mifile.cn/f/i/2014/cn/goods/hongmi2/overall/intro-performance-bg.jpg)
-        }
-    }
-</style>
-
-<div class="navbar navbar-fixed-top product-head">
+<div id="activity">
     <div class="container">
-        <label>mini无人机</label>
-        <a href="#" class="btn btn-info pull-right" target="_blank">立即购买</a>
+        <div class="row">
+            <div class="col-md-6"><img class="img-responsive" src="img/about/about1.jpg" align=""></div>
+            <div class="col-md-6">
+                <h3>2016踏青活动</h3>
+
+                <p>100字 活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍活动介绍</p>
+                <p>时间：xxxxx</p>
+                <p>地点：xxxxx</p>
+            </div>
+        </div>
     </div>
 </div>
-<div class="clearfix"></div>
-<div id="product">
-    <div class="product-desc bg1">
-        <label>小巧机身</label>
-        <p>十字左右的说明</p>
-        <p class="hidden-xs">只有电脑大屏幕才能看到的描述，20字左右</p>
-    </div>
-    <div class="product-desc black bg2">
-        <label>简便操作</label>
-        <p>多项交互创新，打破传统的虚拟摇杆方式</p>
-        <p class="hidden-xs">采用划屏操作，手指滑动方向即为无人机飞行方向</p>
-    </div>
-</div>
-
-
-<script type="text/javascript" src="js/product.js?__inline=true"></script>
 
 
 <script type="text/javascript" src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -98,7 +80,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <span class="copyright">Copyright &copy; 2015 Zego. 备案号  </span>
+                <span id="copyright" class="copyright">Copyright &copy; 2016 Zego. </span>
                 <span id='cnzz_stat_icon_1256462760' style="display: none"></span><script src='http://s4.cnzz.com/z_stat.php?id=1256462760&show=pic1' type='text/javascript'></script>
             </div>
             <div class="col-md-4">
