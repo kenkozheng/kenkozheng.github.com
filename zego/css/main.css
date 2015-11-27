@@ -20,7 +20,7 @@ body {
 }
 
 ::selection {
-    background: #007BC1;
+    background: #1c68b0;
     color: #160ca4;
     text-shadow: none;
 }
@@ -72,6 +72,16 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
+.btn-info{
+    background-color: #4693db;
+    border-color: #007BC1;
+}
+
+.btn-info:hover{
+    background-color: #007BC1;
+    border-color: #1c68b0;
+}
+
 .col-md-4 {
     padding-bottom: 30px;
 }
@@ -82,7 +92,7 @@ body {
 }
 
 .modal-header {
-    background: #74C3EE;
+    background: #1c68b0;
 }
 
 .modal-header h4 {
@@ -92,7 +102,7 @@ body {
 }
 
 .modal-footer {
-    background: #74C3EE;
+    background: #1c68b0;
 }
 
 .navbar-default .navbar-nav > li > a {
@@ -103,7 +113,7 @@ body {
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
-    color: #74C3EE;
+    color: #1c68b0;
     background-color: #fff;
 }
 
@@ -152,7 +162,7 @@ body {
 }
 
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-    color: #74C3EE;
+    color: #1c68b0;
 }
 
 .odd a img {
@@ -621,6 +631,7 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
 
     .product-desc p{
         font-size: 0.8em;
+        line-height: 1.2em;
     }
 
     .navbar-default {
@@ -632,11 +643,15 @@ ul.social-buttons li a:hover, ul.social-buttons li a:focus, ul.social-buttons li
     }
 
     .product-head{
-        margin: 48px 0 0 0;
+        margin: 60px 0 0 0;
+    }
+
+    .product-head .btn-info{
+        display: none;
     }
 
     #product{
-        padding-top: 99px;
+        padding-top: 111px;
     }
 }
 
