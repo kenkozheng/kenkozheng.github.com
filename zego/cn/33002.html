@@ -7,27 +7,37 @@
     <!--用于兼容IE和360什么的，尽量让浏览器用webkit内核-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
+    <meta name="format-detection" content="telephone=no">
     <meta name="keywords" content="无人机,遥控飞机,无线遥控飞机,四轴遥控,玩具飞机,遥控飞碟,电子玩具,遥控车,遥控赛车,高端电子玩具,电子鹦鹉"/>
     <title>霸道横行车——ZEGO翊高</title>
 
+    <!--[if gte IE 9]><!-->
     <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/main.css" rel="stylesheet">
+    <!--<![endif]-->
     <link href="http://cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <script type="text/javascript" src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!-- WARNING: Respond.js don't support cross-domain css -->
     <!--[if lt IE 9]>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
     <script src="https://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!--[if lt IE 8]>
+    <script>
+        alert('Hi, sorry to tell you that your browser is too old. Please upgrade your browser to get better experience!');
+        document.location = 'http://www.google.cn/chrome/browser/desktop/index.html';
+    </script>
     <![endif]-->
 
     <script>
         function changeLanguage(){
             var url = location.href;
-            if(url.indexOf('/cn/')){
+            if(url.indexOf('/cn/') >= 0){
                 location.href = url.replace('/cn/', '/en/');
             } else {
                 location.href = url.replace('/en/', '/cn/');
@@ -43,16 +53,13 @@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span
                         class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button>
-                <a class="navbar-brand" href="index.html"><img src="../img/logo.jpg" alt="ZEGO翊高"/></a>
+                <a class="navbar-brand" href="index.html"></a>
                 <div class="navbar-lang language-en"><a href="javascript:changeLanguage();">English</a></div>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="index.html#headerwrap" class="smoothScroll">首页</a></li>
                     <li><a href="index.html#portfolio" class="smoothScroll"> 产品</a></li>
-                    <!--<li><a href="index.html#video" class="smoothScroll"> 视频简介</a></li>-->
-                    <!--<li><a href="#shop" target="_blank"> 商城</a></li>-->
-                    <!--<li><a href="activity.html"> 活动</a></li>-->
                     <li><a href="index.html#about" class="smoothScroll"> 关于</a></li>
                 </ul>
             </div>
@@ -63,7 +70,7 @@
 <div class="navbar navbar-fixed-top product-head">
     <div class="container">
         <label>霸道横行车</label>
-        <a href="javasript:void(0);" class="btn btn-info pull-right">代理商请联系：(852)27815587 | Jacklam@zego.com.hk</a>
+        <a href="javasript:void(0);" class="btn btn-info pull-right">销售热线：(852)27815587 | Jacklam@zego.com.hk</a>
         <!--<a href="#" class="btn btn-info pull-right" target="_blank">立即购买</a>-->
     </div>
 </div>
