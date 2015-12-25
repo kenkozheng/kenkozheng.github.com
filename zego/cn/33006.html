@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
     <!--用于兼容IE和360什么的，尽量让浏览器用webkit内核-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="renderer" content="webkit">
@@ -69,7 +69,7 @@
 <div class="navbar navbar-fixed-top product-head">
     <div class="container">
         <label>小鹦鹉TalkieBuddies</label>
-        <a href="mailto:Jacklam@zego.com.hk" class="btn btn-info pull-right">联系我们</a>
+        <a href="mailto:Jacklam@zego.com.hk;jadewang@zego.com.hk" class="btn btn-info pull-right">联系我们</a>
         <!--<a href="#" class="btn btn-info pull-right" target="_blank">立即购买</a>-->
     </div>
 </div>
@@ -130,7 +130,7 @@
 
 
 <script>
-$(function(){function c(){$(".product-desc").height(1440*($(".product-desc").width()/2560))}$(window).resize(c),c();var d=$("#product").data("id"),o=$(window).width()<800,r="../img/product/"+d+"/"+(o?"s/":"");$("#product .product-desc").each(function(c,d){var o=r+(c+1)+".jpg";d=$(d),d.css("background-image","url("+o+")"),d.css("filter","progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+o+"', sizingMethod='scale')")})});
+$(function(){function t(){$(".product-desc").height(1440*($(".product-desc").width()/2560))}$(window).resize(t),t();var i=$("#product").data("id"),o=$(window).width()<800,e="../img/product/"+i+"/"+(o?"s/":"");$("#product .product-desc").each(function(t,i){var o=e+(t+1)+".jpg";i=$(i),i.css("background-image","url("+o+")"),i.css("filter","progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+o+"', sizingMethod='scale')")}),$(".product-head .btn").on("click",function(){return o?$("html, body").animate({scrollTop:$(document).height()},600):setTimeout(function(){document.location="index.html#about"},100),!0});var d=$("#video iframe"),c=d.data("src"),r=!/(iphone|ipod|ipad|android|windows phone|blackberry)/i.test(navigator.userAgent),n=r?38:0,a=d.width(),s=360*a/640+n;d.attr("src",c+"&width="+a+"&height="+s),d.css("height",s+"px"),d.parent().css("height",s-n+"px")});
 </script>
 
 
@@ -142,7 +142,7 @@ $(function(){function c(){$(".product-desc").height(1440*($(".product-desc").wid
                 <span class="copyright">Copyright &copy; 2016 Zego</span>
                 <span class="footer-info"><a href="tel:85227815587">Phone: (852)27815587</a></span>
                 <span class="footer-info">Fax: (852)82650184</span>
-                <span class="footer-info"><a href="mailto:Jacklam@zego.com.hk">Email: Jacklam@zego.com.hk</a></span>
+                <span class="footer-info"><a href="mailto:Jacklam@zego.com.hk;jadewang@zego.com.hk">Email: Jacklam@zego.com.hk</a></span>
                 <span class="footer-info">粤ICP备10231073号</span>
                 <span id='cnzz_stat_icon_1256462760' class="hidden"></span><script src='http://s4.cnzz.com/z_stat.php?id=1256462760&show=pic1' type='text/javascript'></script>
             </div>
