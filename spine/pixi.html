@@ -11,7 +11,7 @@
 </div>
 <script>
     function init() {
-        var renderer = new PIXI.WebGLRenderer(400, 600);
+        var renderer = new PIXI.CanvasRenderer(400, 600);
         document.body.appendChild(renderer.view);
         var stage = new PIXI.Container();
         PIXI.loader.add('spineCharacter', 'data/Boy_ShortsShirt_Angry.json')
