@@ -49,22 +49,20 @@
             for (var key in map) {
                 var num = parseInt(key);
                 var html = '<label><input id="checkbox' + key + '" type="checkbox" value="' + num + '"/>' + key + ': ' + map[key] + '</label><br>';
-                $('body').append(html);
+                $('#checkboxList').append(html);
             }
 
             $('button').on('click', function () {
                 reverseChecking = true;
-//                $('input[type=checkbox]').removeAttr('checked');      //这个方式无法清除attr
-                $('input[type=checkbox]').each(function (index, item) {
-                    $(item).removeAttr('checked');
-                });
+                $('input[type=checkbox]').removeAttr('checked');      //这个方式无法清除手工勾选的checkbox
+                document.forms[0].reset();
                 var num = parseInt($('#number').val());
                 var count = 0;
                 while(num > 0){
                     var bit = num & 0x1;
                     var bitNum = Math.pow(2, count);
                     if(bit){
-                        $('#checkbox' + bitNum).attr('checked', 'checked');
+                        $('#checkbox' + bitNum).attr('checked', true);
                     }
                     num = num >> 1;
                     count++;
@@ -72,16 +70,14 @@
                 reverseChecking = false;
             });
 
-            $('input[type=checkbox]').on('change', function () {
+            //由于被js修改过的checkbox，手工选中/取消不会触发change事件，所以改为click
+            $('#checkboxList').on('click', function () {
                 if(reverseChecking){
                     return;
                 }
                 var num = 0;
-                $('input[type=checkbox]').each(function (index, item) {
-                    item = $(item);
-                    if(item.attr('checked')){
-                        num += parseInt(item.val());
-                    }
+                $('input[type=checkbox]:checked').each(function (index, item) {
+                    num += parseInt($(item).val());
                 });
                 $('#number').val(num);
             });
@@ -90,5 +86,8 @@
 </head>
 <body>
 <input type="text" id="number" style="width:200px;"/> <button>反算</button><br><br>
+<form id="checkboxList">
+
+</form>
 </body>
 </html>
