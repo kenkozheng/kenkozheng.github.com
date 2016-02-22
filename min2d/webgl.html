@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>WebGL Basics</title>
+
+</head>
+
+<body onload="init();">
+<div style="position: absolute;top: 0;left: 0;background-color: #fff" id="fps"></div>
+<canvas id="testCanvas" width="900" height="600" style="background: #66AA99"></canvas>
+
+<!-- Note: All core EaselJS classes are listed here: -->
+<script type="text/javascript" src="min2d.min.js"></script>
+
+<script>
+    var stage;
+    var imageMap = {};
+    var timer;
+    var timeElapsed = 0;
+    var fps = 0;
+    var count = 0;
+    var step = 200;
+    var drawCallCount = 0;
+    var delay = 10;
+
+    function init() {
+        stage = new min2d.Stage("testCanvas", 60, 1);
+        var resource = {
+            img: [
+                './img/grossinis_sister1.png',
+                './img/grossinis_sister2.png',
+                './img/grossini_dance_01.png',
+                './img/grossini_dance_02.png',
+                './img/grossini_dance_03.png',
+                './img/grossini_dance_04.png',
+                './img/grossini_dance_05.png'
+            ],
+            spritesheet: [
+                {json: './img/spritesheet.json', img: './img/spritesheet.png'}
+            ]
+        };
+        min2d.preload(resource, function (list) {
+            imageMap = list;
+            stage.onFrame = tick;
+            document.getElementById('testCanvas').addEventListener('mousedown', add);
+
+            //usage example
+//            var sprite1 = new min2d.Sprite(['grossini_dance_01.png','grossini_dance_02.png','grossini_dance_03.png','grossini_dance_04.png','grossini_dance_05.png'], 3);
+//            var sprite1 = new min2d.Sprite(['1.jpg','2.jpg'], 3);
+//            var sprite = new min2d.Sprite('1.jpg');
+//            var sprite2 = new min2d.Sprite('2.jpg');
+//            stage.addChild(sprite1);
+//            stage.addChild(sprite2);
+//            sprite2.x = 100;
+//            sprite2.scaleX = 0.5;
+//            sprite1.y = 200;
+//            sprite1.x = 200;
+//            sprite1.scaleX = 0.5;
+//            sprite1.regX = 38;
+//            sprite1.regY = 58;
+//            sprite1.rotation = -45;
+        });
+    }
+
+    function add(e) {
+        count += step;
+        document.getElementById('fps').innerHTML = 'fps: ' + fps + ' <br>count: ' + count;
+        for (var i = 0; i < step; i++) {
+            var o = buildBitmap();
+            stage.addChild(o);
+            o.x = e ? e.pageX : 450;
+            o.y = e ? e.pageY : 100;
+        }
+    }
+
+    function tick(delta) {
+        drawCallCount = 0;
+        for (var i = 0; i < stage.children.length; i++) {
+            var buddy = stage.children[i];
+            buddy.x += buddy.speedX;
+            buddy.y += buddy.speedY;
+            buddy.speedY += 1;
+            buddy.rotation += buddy.speedR;
+            if (buddy.x >= 900 - 60 || buddy.x <= 0) {
+                buddy.speedX = -buddy.speedX;
+            }
+            if (buddy.y >= 600 - 80 && buddy.speedY > 0) {
+                buddy.speedY = -buddy.speedY * 0.965;
+            }
+        }
+        timeElapsed += delta;
+        fps++;
+        if (timeElapsed > 1000) {
+//                delay--;
+//                if(delay <= 0)
+//                    add();
+            document.getElementById('fps').innerHTML = 'fps: ' + fps + ' <br>count: ' + count;
+            timeElapsed = 0;
+            fps = 0;
+        }
+    }
+
+    function buildBitmap() {
+        var list = ['grossini_dance_05.png', 'grossinis_sister1.png', 'grossinis_sister2.png'];
+        var sprite = new min2d.Sprite(list[parseInt(Math.random() * list.length)]);
+//        var sprite = new min2d.Sprite(['grossini_dance_01.png','grossini_dance_02.png','grossini_dance_03.png','grossini_dance_04.png','grossini_dance_05.png'], 3);
+//        var sprite = new min2d.Sprite('2.jpg');
+        sprite.speedX = 10 - 20 * Math.random();
+        sprite.speedY = -10 * Math.random();
+        sprite.speedR = Math.random();
+        return sprite;
+    }
+
+    function drawCall(delta) {
+        drawCallCount++;
+        console.log(drawCallCount);
+    }
+
+</script>
+
+</body>
+</html>
