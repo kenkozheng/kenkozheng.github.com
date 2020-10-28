@@ -1,0 +1,98 @@
+{
+  "name": "bomb",
+  "imagePath": "bomb_tex.png",
+  "SubTexture": [
+    {
+      "name": "images_FX/glow",
+      "x": 1,
+      "height": 145,
+      "y": 1,
+      "width": 144
+    },
+    {
+      "name": "blue_fx/images/kuosan01",
+      "x": 277,
+      "height": 125,
+      "frameWidth": 128,
+      "y": 130,
+      "frameY": -1,
+      "frameHeight": 128,
+      "frameX": 0,
+      "width": 126
+    },
+    {
+      "name": "images_FX/light01W",
+      "x": 147,
+      "height": 128,
+      "y": 1,
+      "width": 128
+    },
+    {
+      "name": "images/tangguo",
+      "x": 406,
+      "height": 82,
+      "frameWidth": 87,
+      "y": 1,
+      "frameY": -3,
+      "frameHeight": 86,
+      "frameX": -2,
+      "width": 84
+    },
+    {
+      "name": "blue_fx/images/light1",
+      "x": 1,
+      "height": 55,
+      "y": 148,
+      "width": 55
+    },
+    {
+      "name": "blue_fx/images/tang_path1",
+      "x": 405,
+      "height": 24,
+      "y": 230,
+      "width": 22
+    },
+    {
+      "name": "images_FX/light_lizi2",
+      "x": 147,
+      "height": 50,
+      "frameWidth": 128,
+      "y": 131,
+      "frameY": -7,
+      "frameHeight": 64,
+      "frameX": 0,
+      "width": 128
+    },
+    {
+      "name": "images_FX/glow_quan_zise",
+      "x": 277,
+      "height": 127,
+      "y": 1,
+      "width": 127
+    },
+    {
+      "name": "images_FX/lizi02",
+      "x": 58,
+      "height": 55,
+      "frameWidth": 64,
+      "y": 148,
+      "frameY": -5,
+      "frameHeight": 64,
+      "frameX": -6,
+      "width": 50
+    },
+    {
+      "name": "images_FX/guangci03",
+      "x": 405,
+      "height": 98,
+      "frameWidth": 98,
+      "y": 130,
+      "frameY": -6,
+      "frameHeight": 104,
+      "frameX": 0,
+      "width": 98
+    }
+  ],
+  "height": 257,
+  "width": 505
+}
