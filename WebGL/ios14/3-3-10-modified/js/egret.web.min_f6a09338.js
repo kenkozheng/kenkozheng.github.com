@@ -3503,8 +3503,7 @@ var egret;
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, data.texture);
             var size = data.count * 3;
-            // gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
-            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, size, gl.UNSIGNED_SHORT, offset * 2);
             return size;
         }
         egret.sys.drawTextureElements = drawTextureElements;
@@ -6243,8 +6242,8 @@ var egret;
                  */
                 this.$beforeRender = function () {
                     var gl = this.context;
-                    // gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBufferArray[this.vertexBufferIndex]);
-                    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBufferArray[this.vertexBufferIndex]);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+                    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
                     gl.disable(gl.DEPTH_TEST);
                     gl.disable(gl.CULL_FACE);
                     gl.enable(gl.BLEND);
@@ -6268,9 +6267,6 @@ var egret;
                 this.indexBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
-                this.vertexBufferArray = [];
-                this.indexBufferArray = [];
-                this.vertexBufferIndex = 0;
                 this.drawCmdManager = new web.WebGLDrawCmdManager();
                 this.vao = new web.WebGLVertexArrayObject();
                 this.setGlobalCompositeOperation("source-over");
@@ -6915,50 +6911,29 @@ var egret;
                 this.drawCmdManager.pushDisableScissor();
                 buffer.$hasScissor = false;
             };
-            WebGLRenderContext.prototype.reset = function () {
-                this.vertexBufferIndex = 0;
-            };
-            WebGLRenderContext.prototype.uploadVertice = function (array) {
-                var gl = this.context;
-                if (!this.vertexBufferArray[this.vertexBufferIndex]) {
-                    this.vertexBufferArray[this.vertexBufferIndex] = gl.createBuffer();
-                }
-                // console.log('this.vertexBufferArray', this.indexBufferArray.length, array.length);
-                var vertexBuffer = this.vertexBufferArray[this.vertexBufferIndex];
-                gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, array, gl.STREAM_DRAW);
-                // this.vertexBufferIndex++;
-            };
-            WebGLRenderContext.prototype.uploadIndex = function (array) {
-                var gl = this.context;
-                if (!this.indexBufferArray[this.vertexBufferIndex]) {
-                    this.indexBufferArray[this.vertexBufferIndex] = gl.createBuffer();
-                }
-                // console.log('this.indexBufferArray', this.indexBufferArray.length, array.length);
-                var indexBuffer = this.indexBufferArray[this.vertexBufferIndex];
-                gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-                gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, array, gl.STATIC_DRAW);
-            };
             WebGLRenderContext.prototype.$drawWebGL = function () {
                 if (this.drawCmdManager.drawDataLen == 0 || this.contextLost) {
                     return;
                 }
-                this.uploadVerticesArray(this.vao.getVertices());
-                var vertices = this.vao.getVertices();
                 var indices = this.vao.getIndices();
+                var vertices = this.vao.getVertices();
                 // 有mesh，则使用indicesForMesh
                 if (this.vao.isMesh()) {
+                    this.uploadVerticesArray(vertices);
                     this.uploadIndicesArray(this.vao.getMeshIndices());
                 }
                 var length = this.drawCmdManager.drawDataLen;
                 var offset = 0;
                 for (var i = 0; i < length; i++) {
                     var data = this.drawCmdManager.drawData[i];
-                    if (data.type == 0) {
-                        this.uploadIndex(indices.subarray(0, data.count * 3)); // data.count是三角形数目，*3 就是index数量
-                        this.uploadVertice(vertices.subarray(offset / 3 * 10, (offset + data.count * 3) / 3 * 10)); // data.count是三角形数目，对应 *3*2/3的顶点数，每个顶点5个值
+                    if (!this.vao.isMesh() && (data.type == 0 /* TEXTURE */ || data.type == 1 /* RECT */ || data.type == 2 /* PUSH_MASK */ || data.type == 3 /* POP_MASK */)) {
+                        this.uploadIndicesArray(indices.subarray(0, data.count * 3)); // data.count是三角形数目，*3 就是index数量
+                        this.uploadVerticesArray(vertices.subarray(offset / 3 * 10, (offset + data.count * 3) / 3 * 10)); // data.count是三角形数目，对应 *3*2/3的顶点数，每个顶点5个值
+                        this.drawData(data, 0); //每次只推送本次drawcall所需的最小的indexBuffer和vertexBuffer，就没有offset了
+                        offset += data.count * 3; // offset只用于保持egret原有逻辑，索引vao.vertices，取subarray
+                    } else {
+                        offset = this.drawData(data, offset);
                     }
-                    offset = this.drawData(data, offset);
                     // 计算draw call
                     if (data.type == 7 /* ACT_BUFFER */) {
                         this.activatedBuffer = data.buffer;
@@ -7615,7 +7590,6 @@ var egret;
                 this.context.destroy();
             };
             WebGLRenderBuffer.prototype.onRenderFinish = function () {
-                this.context.reset();
                 this.$drawCalls = 0;
             };
             /**
