@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>simple xss</title>
+</head>
+<body>
+<div id="test"></div>
+<script>
+    const dom = document.getElementById('test');
+    let href = 'jaVas\rCript:alert(1)'; // jaVasCript
+    href = replaceXSS(href);
+
+    const xss = `<a href="${href}">click to navigate</a>`;
+    console.log(xss);
+    dom.innerHTML = xss;
+
+    function replaceXSS(href) {
+        if (href.indexOf('javascript:') === 0) {
+            return '';
+        } else {
+            return href.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+    }
+</script>
+</body>
+</html>

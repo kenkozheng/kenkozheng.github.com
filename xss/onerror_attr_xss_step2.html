@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>onerror xss</title>
+</head>
+<body>
+<div id="test"></div>
+<script>
+    const dom = document.getElementById('test');
+    let name = '"><img src="x" onerror="alert(111)"';
+    let msg = '\');(alert(1),\'';
+    name = replaceXSS(name);
+    msg = replaceXSS(msg);
+
+    const xss = `<span data-name="${name}">username</span><img src="x" onerror="console.log('${msg}')"/>`;
+    console.log(xss);
+    dom.innerHTML = xss;
+
+    function replaceXSS(str) {
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+</script>
+</body>
+</html>
