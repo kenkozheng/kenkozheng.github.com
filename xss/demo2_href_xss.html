@@ -5,16 +5,44 @@
   <title>simple xss</title>
 </head>
 <body>
+<input id="input" type="text" style="width: 500px"/><button onclick="go()">Render</button>
+<br>
+<br>
+<br>
 <div id="test"></div>
 <script>
     const dom = document.getElementById('test');
-    let href = 'javascript:alert(1)';
-    // href = replaceXSS(href);
+    const input = document.getElementById('input');
+    let href = 'http://www.baidu.com';
+    // let href = 'javascript:alert(1)';
+    input.value = href;
 
-    const xss = `<a href="${href}">click to navigate</a>`;
-    console.log(xss);
-    dom.innerHTML = xss;
+    function go() {
+        href = input.value;
+        href = href.replace('\\r', '\r');
+        const str = `<a href="${href}">click to navigate</a>`;
+        dom.innerHTML = str;
+    }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    href = replaceXSS(href);
     function replaceXSS(href) {
         if (href.indexOf('javascript:') === 0) {
             return '';

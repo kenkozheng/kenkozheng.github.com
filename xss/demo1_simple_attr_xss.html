@@ -3,18 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>simple xss</title>
+  <style>
+      .name {
+          display: inline-block;
+          width: 100px;
+      }
+      .score {
+          display: inline-block;
+          width: 50px;
+      }
+    #test > div {
+        border: 1px solid gray;
+        width: 150px;
+    }
+  </style>
 </head>
 <body>
+<input id="input" type="text" style="width: 500px"/><button onclick="go()">Render</button>
+<br>
+<br>
+<br>
 <div id="test"></div>
 <script>
     const dom = document.getElementById('test');
-    let name = '"><img src="x" onerror="alert(111)"';
-    // name = replaceXSS(name);
+    const input = document.getElementById('input');
+    let name = 'Kenko';
+    // let name = '"><img src="x" onerror="alert(111)"';
+    input.value = name;
 
-    const xss = `<span data-name="${name}">username</span>`;
-    console.log(xss);
-    dom.innerHTML = xss;
+    function go() {
+        name = input.value;
+        const row1 = `<div><span class="name" data-name="Vivid">Vivid</span><span class="score">333</span></div>`;
+        const row2 = `<div><span class="name" data-name="${name}">${name}</span><span class="score">222</span></div>`;
+        const row3 = `<div><span class="name" data-name="Queen">Queen</span><span class="score">111</span></div>`;
+        dom.innerHTML = row1 + row2 + row3;
+    }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    name = replaceXSS(name);
     function replaceXSS(str) {
         return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
